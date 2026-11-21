@@ -57,7 +57,6 @@
     .font-story { font-family: 'Gowun Batang', serif; }
     .font-title { font-family: 'Jua', sans-serif; }
 
-    /* 양피지 질감 카드 */
     .parchment-page {
       background-color: var(--parchment);
       background-image:
@@ -69,7 +68,6 @@
         inset 0 0 36px rgba(155, 120, 52, 0.16);
     }
 
-    /* 금박 이중 테두리 */
     .gold-frame {
       border: 2px solid var(--gold);
       position: relative;
@@ -83,7 +81,6 @@
       border-radius: inherit;
     }
 
-    /* 빨간 리본 책갈피 */
     .ribbon-bookmark {
       position: absolute;
       top: -2px;
@@ -96,22 +93,14 @@
       z-index: 10;
     }
 
-    /* 원목 책장 선반 */
     .wood-shelf {
       background: linear-gradient(180deg, #6E472B 0%, #4A2E1B 65%, #341E11 100%);
       box-shadow: 0 10px 18px rgba(0,0,0,0.45), inset 0 2px 2px rgba(255,220,175,0.2);
     }
 
-    /* 책장 넘김 3D 애니메이션 */
-    .book-stage {
-      perspective: 1400px;
-    }
-    .page-flip-next {
-      animation: flipNext 0.42s cubic-bezier(0.22, 0.61, 0.36, 1);
-    }
-    .page-flip-prev {
-      animation: flipPrev 0.42s cubic-bezier(0.22, 0.61, 0.36, 1);
-    }
+    .book-stage { perspective: 1400px; }
+    .page-flip-next { animation: flipNext 0.42s cubic-bezier(0.22, 0.61, 0.36, 1); }
+    .page-flip-prev { animation: flipPrev 0.42s cubic-bezier(0.22, 0.61, 0.36, 1); }
     @keyframes flipNext {
       0% { transform: rotateY(16deg) scale(0.97); opacity: 0.35; }
       100% { transform: rotateY(0deg) scale(1); opacity: 1; }
@@ -121,7 +110,6 @@
       100% { transform: rotateY(0deg) scale(1); opacity: 1; }
     }
 
-    /* 캔버스 스케치북 */
     #draw-canvas {
       touch-action: none;
       cursor: crosshair;
@@ -133,7 +121,6 @@
     .scrollbar-none::-webkit-scrollbar { display: none; }
     .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
 
-    /* 양장본 미니 책 카드 */
     .hardcover-book {
       background: linear-gradient(135deg, #7C2D12 0%, #581C0C 100%);
       box-shadow:
@@ -149,27 +136,27 @@
   <header class="pwa-header sticky top-0 z-30 bg-[#1F140E]/95 backdrop-blur border-b border-amber-700/30 px-4 pb-3">
     <div class="max-w-lg mx-auto flex items-center justify-between">
       <div class="flex items-center gap-2.5">
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center shadow-md border border-amber-300/40 text-lg">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center shadow-md border border-amber-300/40 text-lg shrink-0">
           📖
         </div>
-        <div>
-          <div class="flex items-center gap-1.5">
-            <h1 class="font-title text-lg text-amber-100 leading-tight tracking-wide">낙서 동화책 아틀리에</h1>
-            <span id="active-model-badge" class="text-[9px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 px-1.5 py-0.5 rounded-full">3.x 자동</span>
+        <div class="min-w-0">
+          <div class="flex items-center gap-1.5 flex-wrap">
+            <h1 class="font-title text-base sm:text-lg text-amber-100 leading-tight tracking-wide truncate">낙서 동화책 아틀리에</h1>
+            <span id="active-model-badge" class="text-[9px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 px-1.5 py-0.5 rounded-full shrink-0">FLUX 연동</span>
           </div>
-          <p class="text-[11px] text-amber-300/75">낙서가 AI 그림동화책으로 피어나는 곳</p>
+          <p class="text-[10.5px] text-amber-300/75 truncate">낙서가 AI 그림동화책으로 피어나는 곳</p>
         </div>
       </div>
 
-      <div class="flex items-center gap-1.5">
-        <button onclick="switchTab('studio')" id="tab-studio" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-600 text-white shadow transition">
+      <div class="flex items-center gap-1.5 shrink-0">
+        <button onclick="switchTab('studio')" id="tab-studio" class="px-2.5 py-1.5 rounded-xl text-xs font-bold bg-amber-600 text-white shadow transition">
           ✏️ 만들기
         </button>
-        <button onclick="switchTab('library')" id="tab-library" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-stone-800 text-amber-200/80 border border-amber-700/30 transition relative">
+        <button onclick="switchTab('library')" id="tab-library" class="px-2.5 py-1.5 rounded-xl text-xs font-bold bg-stone-800 text-amber-200/80 border border-amber-700/30 transition relative">
           📚 서재
-          <span id="library-count" class="hidden ml-1 bg-rose-600 text-white text-[10px] px-1.5 py-0.2 rounded-full">0</span>
+          <span id="library-count" class="hidden ml-1 bg-rose-600 text-white text-[10px] px-1.5 rounded-full">0</span>
         </button>
-        <button onclick="openSettings()" class="p-2 rounded-xl bg-stone-800/80 border border-amber-700/30 text-amber-200 hover:bg-stone-700 transition" title="API 키 및 모델 설정">
+        <button onclick="openSettings()" class="p-2 rounded-xl bg-stone-800/80 border border-amber-700/30 text-amber-200 hover:bg-stone-700 transition" title="API 키 및 삽화 엔진 설정">
           ⚙️
         </button>
       </div>
@@ -178,7 +165,7 @@
 
   <main class="max-w-lg mx-auto px-4 py-5 space-y-5">
 
-    <!-- PWA 앱 설치 배너 (브라우저로 열었을 때만 표시) -->
+    <!-- PWA 앱 설치 배너 -->
     <div id="install-banner" class="hidden bg-amber-900/50 border border-amber-500/40 rounded-2xl px-4 py-3 flex items-center justify-between text-amber-100">
       <div class="text-xs">
         <p class="font-bold">📱 주소창 없는 전체 화면 앱으로 설치</p>
@@ -194,7 +181,6 @@
       <div class="parchment-page gold-frame rounded-3xl p-5 relative overflow-hidden">
         <div class="ribbon-bookmark"></div>
 
-        <!-- 네 모서리 SVG 금박 장식 -->
         <svg class="absolute top-2.5 left-2.5 w-6 h-6 text-[#C8A45D] opacity-80 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12V3h9M3 7c2.5 0 4-1.5 4-4"/></svg>
         <svg class="absolute bottom-2.5 left-2.5 w-6 h-6 text-[#C8A45D] opacity-80 pointer-events-none" style="transform:rotate(-90deg)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12V3h9M3 7c2.5 0 4-1.5 4-4"/></svg>
         <svg class="absolute bottom-2.5 right-2.5 w-6 h-6 text-[#C8A45D] opacity-80 pointer-events-none" style="transform:rotate(180deg)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12V3h9M3 7c2.5 0 4-1.5 4-4"/></svg>
@@ -204,7 +190,6 @@
           <h2 class="font-story font-bold text-xl text-stone-900">종이 낙서를 찍거나 바로 그려보세요</h2>
         </div>
 
-        <!-- 입력 모드 전환 탭 -->
         <div class="grid grid-cols-2 gap-2 mb-3 bg-[#E9DEC7] p-1 rounded-2xl">
           <button onclick="setInputMode('draw')" id="mode-draw-btn" class="py-2 rounded-xl text-xs font-bold bg-[#FAF4E6] text-stone-900 shadow-sm transition">
             🖍️ 크레용 스케치북
@@ -223,7 +208,6 @@
             </span>
           </div>
 
-          <!-- 8가지 따뜻한 크레용 색상 -->
           <div class="flex items-center justify-between gap-2 flex-wrap">
             <div id="color-palette" class="flex items-center gap-1.5 flex-wrap"></div>
             <div class="flex items-center gap-1">
@@ -233,7 +217,6 @@
             </div>
           </div>
 
-          <!-- 굵기 3단계 -->
           <div class="flex items-center gap-2 text-xs text-stone-600">
             <span class="font-bold">크레용 굵기:</span>
             <button onclick="setBrushSize(4)" data-size="4" class="size-btn px-2.5 py-1 rounded-lg bg-[#EFE5CF] border border-[#D4BC8B]">가늘게</button>
@@ -284,8 +267,8 @@
             <span>AI 그림동화책 만들기</span>
           </button>
 
-          <p id="api-key-notice" class="hidden text-[11px] text-center text-amber-900 bg-amber-200/60 border border-amber-400/50 rounded-xl px-3 py-2">
-            🔑 우측 상단 <b>⚙️ 설정</b>에서 무료 <b>Gemini API 키</b>를 입력하면 실제 AI 스토리와 삽화가 생성됩니다. (키가 없어도 샘플 동화로 체험 가능!)
+          <p id="setup-notice" class="hidden text-[11px] text-center text-amber-900 bg-amber-200/60 border border-amber-400/50 rounded-xl px-3 py-2 leading-relaxed">
+            🔑 우측 상단 <b>⚙️ 설정</b>에서 <b>Gemini API 키</b>(스토리용)와 <b>Cloudflare Worker 주소</b>(무료 고화질 FLUX 삽화용)를 입력해 주세요.
           </p>
         </div>
       </div>
@@ -308,31 +291,24 @@
         <div id="book-page-card" class="parchment-page gold-frame rounded-3xl p-5 relative overflow-hidden min-h-[540px] flex flex-col justify-between">
           <div class="ribbon-bookmark"></div>
 
-          <!-- 페이지 헤더 -->
           <div class="flex items-center justify-between pr-8 mb-3">
-            <span id="page-badge" class="text-[11px] font-bold text-amber-900 bg-amber-200/80 px-2.5 py-0.5 rounded-full">
-              표지
-            </span>
+            <span id="page-badge" class="text-[11px] font-bold text-amber-900 bg-amber-200/80 px-2.5 py-0.5 rounded-full">표지</span>
             <span id="style-badge" class="text-[11px] text-stone-500 font-medium"></span>
           </div>
 
-          <!-- 삽화 프레임 -->
           <div class="relative rounded-2xl overflow-hidden border-2 border-[#C8A45D] bg-[#EFE6D2] aspect-[4/3] flex items-center justify-center shadow-inner mb-4">
             <img id="page-image" class="w-full h-full object-cover hidden" alt="동화 삽화" />
 
-            <!-- 삽화 생성 중 로더 -->
             <div id="page-img-loader" class="hidden flex flex-col items-center justify-center p-4 text-center space-y-2">
               <div class="w-8 h-8 border-4 border-amber-700 border-t-transparent rounded-full animate-spin"></div>
               <p class="font-story text-xs font-bold text-amber-900" id="page-img-loader-text">AI 화가가 삽화를 그리는 중...</p>
             </div>
 
-            <!-- 삽화 다시 그리기 / 표지 AI 변신 플로팅 버튼 -->
             <button onclick="regenerateCurrentIllustration()" id="regen-img-btn" class="absolute bottom-2.5 right-2.5 bg-[#2C1E16]/85 hover:bg-[#2C1E16] text-amber-100 text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur border border-amber-400/40 shadow-md active:scale-95 transition">
               🎨 삽화 다시 그리기
             </button>
           </div>
 
-          <!-- 텍스트 영역 -->
           <div id="page-text-area" class="space-y-2.5 flex-1 flex flex-col justify-center">
             <h2 id="page-title" class="font-story font-bold text-2xl text-stone-900 text-center leading-snug"></h2>
             <p id="page-subtitle" class="font-story text-xs text-amber-900/80 text-center"></p>
@@ -343,7 +319,6 @@
             </div>
           </div>
 
-          <!-- 뷰어 내 실시간 화풍 전환 바 -->
           <div class="mt-4 pt-3 border-t border-[#DFCFAF]">
             <div class="flex items-center justify-between mb-1.5">
               <span class="text-[11px] font-bold text-stone-600">🎨 화풍 바꿔 다시 그리기</span>
@@ -376,15 +351,9 @@
           </div>
         </div>
         <div class="grid grid-cols-3 gap-2">
-          <button onclick="speakCurrentPage(false)" class="py-2 rounded-xl bg-stone-800 hover:bg-stone-700 text-xs font-bold transition">
-            ▶ 이 페이지 듣기
-          </button>
-          <button onclick="startAutoRead()" class="py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold transition">
-            📖 처음부터 낭독
-          </button>
-          <button onclick="stopTts()" class="py-2 rounded-xl bg-rose-900/70 hover:bg-rose-800 text-rose-100 text-xs font-bold transition">
-            ⏹ 멈춤
-          </button>
+          <button onclick="speakCurrentPage(false)" class="py-2 rounded-xl bg-stone-800 hover:bg-stone-700 text-xs font-bold transition">▶ 이 페이지 듣기</button>
+          <button onclick="startAutoRead()" class="py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold transition">📖 처음부터 낭독</button>
+          <button onclick="stopTts()" class="py-2 rounded-xl bg-rose-900/70 hover:bg-rose-800 text-rose-100 text-xs font-bold transition">⏹ 멈춤</button>
         </div>
       </div>
     </section>
@@ -410,7 +379,7 @@
 
   </main>
 
-  <!-- ==================== 로딩 오버레이 (스토리 생성 중) ==================== -->
+  <!-- ==================== 로딩 오버레이 ==================== -->
   <div id="loading-overlay" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-5">
     <div class="parchment-page gold-frame rounded-3xl p-7 max-w-xs w-full text-center space-y-4">
       <div class="w-12 h-12 mx-auto border-4 border-amber-700 border-t-transparent rounded-full animate-spin"></div>
@@ -432,61 +401,72 @@
         <img id="card-preview-img" class="max-h-[55vh] w-auto object-contain" alt="이미지 카드 미리보기" />
       </div>
       <div class="grid grid-cols-2 gap-2">
-        <button onclick="downloadCurrentCard()" class="py-2.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold shadow">
-          📥 이 페이지 PNG 저장
-        </button>
-        <button onclick="downloadAllCards()" id="download-all-btn" class="py-2.5 rounded-xl bg-stone-700 hover:bg-stone-600 text-amber-100 text-xs font-bold">
-          📚 전체 페이지 저장
-        </button>
+        <button onclick="downloadCurrentCard()" class="py-2.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold shadow">📥 이 페이지 PNG 저장</button>
+        <button onclick="downloadAllCards()" id="download-all-btn" class="py-2.5 rounded-xl bg-stone-700 hover:bg-stone-600 text-amber-100 text-xs font-bold">📚 전체 페이지 저장</button>
       </div>
     </div>
   </div>
 
-  <!-- ==================== API 키 & Gemini 3.8+ 모델 설정 모달 ==================== -->
+  <!-- ==================== API 키 & Cloudflare FLUX 설정 모달 ==================== -->
   <div id="settings-modal" onclick="if(event.target===this) closeSettings()" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
     <div class="parchment-page gold-frame rounded-3xl max-w-sm w-full p-5 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between border-b border-[#DFCFAF] pb-2.5">
-        <h3 class="font-title text-lg text-stone-900">⚙️ AI 모델 & API 설정</h3>
+        <h3 class="font-title text-lg text-stone-900">⚙️ AI 모델 & 삽화 엔진 설정</h3>
         <button onclick="closeSettings()" class="text-stone-500 text-lg">✕</button>
       </div>
 
-      <div class="space-y-3 text-xs">
-        <div>
-          <label class="block font-bold text-stone-800 mb-1">Gemini API Key</label>
+      <div class="space-y-3.5 text-xs">
+        <!-- 1. 무료 삽화 엔진 (Cloudflare Workers AI) -->
+        <div class="bg-amber-100/70 border border-amber-400/50 rounded-2xl p-3 space-y-2">
+          <label class="block font-bold text-amber-950">🎨 삽화 생성 엔진</label>
+          <select id="input-img-provider" onchange="toggleProviderFields()" class="w-full bg-white border border-[#D4BC8B] rounded-xl px-3 py-2 text-stone-800 outline-none font-bold">
+            <option value="cloudflare">⚡ Cloudflare Workers AI (FLUX 매일 무료 · 추천)</option>
+            <option value="gemini">💎 Gemini 이미지 모델 (유료 결제 계정용)</option>
+          </select>
+
+          <div id="field-cloudflare" class="space-y-1.5 pt-1">
+            <label class="block font-bold text-stone-800">Cloudflare Worker 주소 (URL)</label>
+            <input type="url" id="input-cf-worker-url" placeholder="https://storybook-flux.내아이디.workers.dev" class="w-full bg-white border border-[#D4BC8B] rounded-xl px-3 py-2 text-stone-800 outline-none focus:ring-2 focus:ring-amber-600" />
+            <p class="text-[10.5px] text-stone-600 leading-relaxed">
+              Cloudflare에서 배포한 Worker 주소를 붙여넣으면 매일 무료로 고화질 FLUX 삽화가 생성됩니다.
+            </p>
+          </div>
+
+          <div id="field-gemini-img" class="hidden space-y-1.5 pt-1">
+            <label class="block font-bold text-stone-800">Gemini 이미지 모델 선택</label>
+            <select id="input-img-model" class="w-full bg-white border border-[#D4BC8B] rounded-xl px-3 py-2 text-stone-800 outline-none">
+              <option value="auto">✨ 자동 탐색</option>
+              <option value="gemini-2.5-flash-image">gemini-2.5-flash-image</option>
+              <option value="gemini-2.0-flash-exp-image-generation">gemini-2.0-flash-exp-image-generation</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 2. 동화 스토리 엔진 (Gemini 무료) -->
+        <div class="space-y-2">
+          <label class="block font-bold text-stone-800">🔑 Gemini API Key (낙서 분석 & 동화 작성용 · 무료)</label>
           <input type="password" id="input-api-key" placeholder="AIzaSy... 형태의 키 입력" class="w-full bg-white border border-[#D4BC8B] rounded-xl px-3 py-2 text-stone-800 outline-none focus:ring-2 focus:ring-amber-600" />
-          <p class="text-[11px] text-stone-500 mt-1 leading-relaxed">
-            키는 내 기기(localStorage)에만 안전하게 보관됩니다.
-            <a href="https://aistudio.google.com/apikey" target="_blank" class="underline text-amber-800 font-bold">Google AI Studio에서 발급 ↗</a>
+          <p class="text-[10.5px] text-stone-500 leading-relaxed">
+            키는 내 기기(localStorage)에만 보관됩니다.
+            <a href="https://aistudio.google.com/apikey" target="_blank" class="underline text-amber-800 font-bold">Google AI Studio ↗</a>
           </p>
         </div>
 
         <div>
-          <label class="block font-bold text-stone-800 mb-1">동화 스토리 생성 모델 (3.8 / 3.0+ 자동 지원)</label>
+          <label class="block font-bold text-stone-800 mb-1">동화 스토리 모델</label>
           <select id="input-story-model" onchange="toggleCustomModelInput()" class="w-full bg-white border border-[#D4BC8B] rounded-xl px-3 py-2 text-stone-800 outline-none">
-            <option value="auto">✨ 자동 최신 모델 탐색 (3.8 → 3.x → 3.0 → 2.5 추천)</option>
-            <option value="gemini-3.8-flash">gemini-3.8-flash (3.8 우선)</option>
-            <option value="gemini-3.0-flash">gemini-3.0-flash (3.0 Flash)</option>
-            <option value="gemini-2.5-flash">gemini-2.5-flash (2.5 Flash)</option>
+            <option value="auto">✨ 자동 최신 모델 탐색 (3.8 → 3.x → 3.0 → 2.5)</option>
+            <option value="gemini-3.8-flash">gemini-3.8-flash</option>
+            <option value="gemini-3.0-flash">gemini-3.0-flash</option>
+            <option value="gemini-2.5-flash">gemini-2.5-flash</option>
             <option value="custom">직접 모델명 입력...</option>
           </select>
-          <input type="text" id="input-custom-story-model" placeholder="예: gemini-3.8-flash 또는 gemini-4.0-flash" class="hidden mt-1.5 w-full bg-white border border-[#D4BC8B] rounded-xl px-3 py-2 text-stone-800 outline-none" />
-          <p class="text-[10.5px] text-stone-500 mt-1 leading-relaxed">
-            * <b>자동 최신 모델 탐색</b>을 선택하면 내 API 키에서 허용된 가장 높은 버전(3.8, 3.0 등)을 스스로 조회해 연결하므로 버전 종료 오류가 나지 않습니다.
-          </p>
-        </div>
-
-        <div>
-          <label class="block font-bold text-stone-800 mb-1">삽화 생성 모델</label>
-          <select id="input-img-model" class="w-full bg-white border border-[#D4BC8B] rounded-xl px-3 py-2 text-stone-800 outline-none">
-            <option value="auto">✨ 자동 탐색 (최신 이미지 생성 모델 우선)</option>
-            <option value="gemini-2.5-flash-image">gemini-2.5-flash-image</option>
-            <option value="gemini-2.0-flash-exp-image-generation">gemini-2.0-flash-exp-image-generation</option>
-          </select>
+          <input type="text" id="input-custom-story-model" placeholder="예: gemini-3.8-flash" class="hidden mt-1.5 w-full bg-white border border-[#D4BC8B] rounded-xl px-3 py-2 text-stone-800 outline-none" />
         </div>
       </div>
 
       <div class="flex gap-2 pt-1">
-        <button onclick="clearApiKey()" class="flex-1 py-2.5 rounded-xl bg-rose-100 text-rose-800 font-bold text-xs">키 삭제</button>
+        <button onclick="clearApiKey()" class="flex-1 py-2.5 rounded-xl bg-rose-100 text-rose-800 font-bold text-xs">초기화</button>
         <button onclick="saveSettings()" class="flex-1 py-2.5 rounded-xl bg-amber-700 text-white font-bold text-xs shadow">저장하기</button>
       </div>
     </div>
@@ -496,7 +476,7 @@
   <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-[#2C1E16] border border-amber-500/50 text-amber-100 text-xs font-bold px-4 py-2.5 rounded-full shadow-xl hidden max-w-[90vw] text-center"></div>
 
   <script>
-    // ==================== PWA 서비스 워커 등록 & 설치 프롬프트 ====================
+    // ==================== PWA 서비스 워커 등록 & 설치 ====================
     let deferredInstallPrompt = null;
 
     if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
@@ -524,56 +504,35 @@
       deferredInstallPrompt = null;
     }
 
-    // ==================== 화풍 프리셋 정의 ====================
+    // ==================== 아날로그 동화 화풍 프리셋 (FLUX & Gemini 최적화) ====================
     const ART_STYLES = {
       ghibli90s: {
         id: 'ghibli90s',
         label: '🌿 90s 지브리 셀애니',
         short: '90s 지브리',
         desc: '1990년대 손그림 셀 & 포스터컬러',
-        prompt: [
-          "Authentic 1988-1995 Japanese theatrical hand-painted cel animation film still.",
-          "Background painted by hand with Nicker poster color and opaque matte gouache on paper, visible delicate brushwork, soft earthy greens, warm cream skies, muted ochre, natural dappled komorebi sunlight filtering through foliage.",
-          "Character drawn with fine dark sepia/charcoal hand-inked pencil outlines and flat 2-tone traditional cel shading with NO airbrush gradients, faithfully preserving the humble, charming proportions and colors of the child's original doodle.",
-          "Subtle 35mm film grain, gentle halation, matte analog finish, nostalgic quiet everyday warmth.",
-          "STRICT NEGATIVE: NO 3D rendering, NO glossy plastic skin, NO digital airbrush shine, NO neon or magical AI glow particles, NO oversaturated cyan/orange contrast, NO modern anime digital lens flare, NO text or watermarks."
-        ].join(" ")
+        prompt: "Authentic 1990s Japanese hand-painted theatrical cel animation still, Nicker poster color and matte gouache painted background with visible soft brushwork, earthy greens, warm cream sky, dappled sunlight through trees, dark sepia hand-inked outlines, flat 2-tone cel shading, subtle 35mm film grain, cozy nostalgic everyday warmth, no 3D, no glossy plastic, no neon glow, no text."
       },
       watercolor: {
         id: 'watercolor',
         label: '🎨 수채화 그림책',
         short: '수채화',
         desc: '면지 수채 번짐 & 연필 밑그림',
-        prompt: [
-          "Classic European children's picture book illustration hand-painted in soft transparent watercolor on heavy cold-pressed cotton paper.",
-          "Visible paper grain, gentle wet-on-wet pigment blooms, delicate graphite pencil underdrawing, warm muted storybook palette with generous breathing white space.",
-          "Faithfully adapt the child's doodle character into a tender, hand-drawn watercolor protagonist.",
-          "STRICT NEGATIVE: NO digital gloss, NO 3D CGI, NO harsh neon lighting, NO overly polished AI sparkle effects, NO text or letters."
-        ].join(" ")
+        prompt: "Classic European children's picture book illustration hand-painted in soft transparent watercolor on textured cold-pressed cotton paper, gentle pigment blooms, delicate graphite pencil outlines, warm muted storybook palette, airy cozy composition, no 3D CGI, no digital gloss, no text."
       },
       crayon: {
         id: 'crayon',
         label: '🖍️ 파스텔 크레용',
         short: '크레용',
         desc: '스케치북 왁스 크레용 손맛',
-        prompt: [
-          "Warm handmade children's storybook illustration created with wax crayons, oil pastels, and colored pencils on textured cream sketchbook paper.",
-          "Rich tactile waxy strokes, slightly imperfect playful outlines, cozy nostalgic warmth inspired by classic hand-drawn picture books.",
-          "Keep the playful spirit and distinct shape of the child's original doodle character.",
-          "STRICT NEGATIVE: NO 3D render, NO smooth vector art, NO airbrushed digital polish, NO glowing AI artifacts, NO text."
-        ].join(" ")
+        prompt: "Handmade children's picture book illustration drawn with wax crayons, oil pastels, and colored pencils on textured cream sketchbook paper, tactile waxy strokes, playful hand-drawn charm, warm nostalgic tones, no 3D render, no glossy airbrush, no text."
       },
       nightsky: {
         id: 'nightsky',
         label: '🌙 밤하늘 과슈 동화',
         short: '밤하늘',
         desc: '매트한 과슈와 색연필 잠자리 동화',
-        prompt: [
-          "Cozy bedtime children's picture book illustration hand-painted in matte opaque gouache and soft colored pencils.",
-          "Deep velvety indigo and slate-blue night sky, warm honey-yellow candlelight and soft crescent moon glow, comforting serene atmosphere.",
-          "Faithfully translate the child's doodle into the gentle main character of this peaceful night scene.",
-          "STRICT NEGATIVE: NO neon laser glow, NO CGI 3D, NO glossy plastic textures, NO oversaturated purple/magenta AI lighting, NO text."
-        ].join(" ")
+        prompt: "Cozy bedtime children's picture book illustration painted in matte opaque gouache and colored pencils, deep velvety indigo night sky, warm honey-yellow moonlight and soft starlight, serene comforting atmosphere, no neon laser glow, no 3D CGI, no text."
       }
     };
 
@@ -613,7 +572,7 @@
       initCanvas();
       renderColorPalette();
       renderStyleSelectors();
-      checkApiKeyNotice();
+      checkSetupNotice();
       updateModelBadge();
       setupSwipeGestures();
     }
@@ -623,34 +582,35 @@
       el.textContent = msg;
       el.classList.remove('hidden');
       clearTimeout(window._toastTimer);
-      window._toastTimer = setTimeout(() => el.classList.add('hidden'), 3000);
+      window._toastTimer = setTimeout(() => el.classList.add('hidden'), 3200);
     }
 
-    function getApiKey() {
-      return (localStorage.getItem('atelier_gemini_api_key') || '').trim();
+    function getApiKey() { return (localStorage.getItem('atelier_gemini_api_key') || '').trim(); }
+    function getImgProvider() { return localStorage.getItem('atelier_img_provider') || 'cloudflare'; }
+    function getCfWorkerUrl() { return (localStorage.getItem('atelier_cf_worker_url') || '').trim().replace(/\/$/, ''); }
+    function getStoryModelPref() { return localStorage.getItem('atelier_story_model') || 'auto'; }
+    function getCustomStoryModel() { return (localStorage.getItem('atelier_custom_story_model') || '').trim(); }
+    function getImgModelPref() { return localStorage.getItem('atelier_img_model') || 'auto'; }
+
+    function canGenerateIllustrations() {
+      if (getImgProvider() === 'cloudflare') return !!getCfWorkerUrl();
+      return !!getApiKey();
     }
-    function getStoryModelPref() {
-      return localStorage.getItem('atelier_story_model') || 'auto';
+
+    function checkSetupNotice() {
+      const missingKey = !getApiKey();
+      const missingCf = getImgProvider() === 'cloudflare' && !getCfWorkerUrl();
+      document.getElementById('setup-notice').classList.toggle('hidden', !missingKey && !missingCf);
     }
-    function getCustomStoryModel() {
-      return (localStorage.getItem('atelier_custom_story_model') || '').trim();
-    }
-    function getImgModelPref() {
-      return localStorage.getItem('atelier_img_model') || 'auto';
-    }
-    function checkApiKeyNotice() {
-      document.getElementById('api-key-notice').classList.toggle('hidden', !!getApiKey());
-    }
+
     function updateModelBadge(resolvedName) {
       const badge = document.getElementById('active-model-badge');
+      const imgTag = getImgProvider() === 'cloudflare' ? 'FLUX' : 'G-Img';
       if (resolvedName) {
-        badge.textContent = resolvedName.replace('models/', '').replace('gemini-', 'G');
+        badge.textContent = `${resolvedName.replace('models/', '').replace('gemini-', 'G')} · ${imgTag}`;
         return;
       }
-      const pref = getStoryModelPref();
-      if (pref === 'auto') badge.textContent = '3.x 자동';
-      else if (pref === 'custom') badge.textContent = (getCustomStoryModel() || '커스텀').replace('gemini-', 'G');
-      else badge.textContent = pref.replace('gemini-', 'G');
+      badge.textContent = getImgProvider() === 'cloudflare' ? '무료 FLUX' : 'Gemini';
     }
 
     // ==================== 스케치북 캔버스 ====================
@@ -860,7 +820,7 @@
       showToast(`${ART_STYLES[id].short} 화풍으로 변경됨! [다시 그리기]를 눌러 적용하세요.`);
     }
 
-    // ==================== Gemini 최신 모델(3.8 / 3.0+) 자동 탐색 엔진 ====================
+    // ==================== Gemini 최신 모델 자동 탐색 ====================
     function parseVersionScore(modelName) {
       const m = modelName.match(/gemini-(\d+)(?:\.(\d+))?/i);
       if (!m) return 0;
@@ -878,14 +838,8 @@
         candidates.push(`models/${pref}`);
       }
 
-      // 기본 우선순위 (3.8 → 3.0 → 2.5)
-      candidates.push(
-        'models/gemini-3.8-flash',
-        'models/gemini-3.0-flash',
-        'models/gemini-2.5-flash'
-      );
+      candidates.push('models/gemini-3.8-flash', 'models/gemini-3.0-flash', 'models/gemini-2.5-flash');
 
-      // 내 API 키에서 실제로 사용 가능한 최신 Flash 모델 자동 조회 후 높은 버전 순으로 삽입
       try {
         const listRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${encodeURIComponent(apiKey)}`);
         if (listRes.ok) {
@@ -902,50 +856,14 @@
             .sort((a, b) => parseVersionScore(b.name) - parseVersionScore(a.name))
             .map(m => m.name);
 
-          if (pref === 'auto') {
-            candidates = [...available, ...candidates];
-          } else {
-            candidates = [...candidates, ...available];
-          }
-        }
-      } catch (e) {
-        console.warn('모델 목록 조회 생략:', e);
-      }
-
-      return [...new Set(candidates)];
-    }
-
-    async function discoverImageModels(apiKey) {
-      const pref = getImgModelPref();
-      let candidates = [];
-      if (pref !== 'auto') candidates.push(`models/${pref}`);
-
-      candidates.push(
-        'models/gemini-3.0-flash-image',
-        'models/gemini-2.5-flash-image',
-        'models/gemini-2.0-flash-exp-image-generation'
-      );
-
-      try {
-        const listRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${encodeURIComponent(apiKey)}`);
-        if (listRes.ok) {
-          const listData = await listRes.json();
-          const availableImg = (listData.models || [])
-            .filter(m =>
-              m.name.includes('image') &&
-              (m.supportedGenerationMethods || []).includes('generateContent')
-            )
-            .sort((a, b) => parseVersionScore(b.name) - parseVersionScore(a.name))
-            .map(m => m.name);
-
-          candidates = pref === 'auto' ? [...availableImg, ...candidates] : [...candidates, ...availableImg];
+          candidates = pref === 'auto' ? [...available, ...candidates] : [...candidates, ...available];
         }
       } catch (e) {}
 
       return [...new Set(candidates)];
     }
 
-    // ==================== Gemini API 호출 (스토리 + 삽화) ====================
+    // ==================== 스토리 & 삽화 생성 ====================
     async function generateStorybook() {
       const rawImage = inputMode === 'upload' ? uploadedImageDataUrl : canvas.toDataURL('image/jpeg', 0.85);
       if (inputMode === 'upload' && !uploadedImageDataUrl) {
@@ -970,7 +888,7 @@
         if (!apiKey) {
           await new Promise(r => setTimeout(r, 900));
           storyData = buildDemoStory(heroName || '몽글이');
-          showToast('API 키가 없어 체험용 동화로 열었습니다. ⚙️ 설정에서 키를 넣으면 AI가 직접 써줘요!');
+          showToast('Gemini 키가 없어 체험용 동화로 열었습니다.');
         } else {
           storyData = await callGeminiStoryApi(apiKey, rawImage, heroName, tone);
         }
@@ -983,7 +901,7 @@
           coverImage: '',
           title: storyData.title,
           characterSummary: storyData.characterSummary,
-          characterVisualEn: storyData.characterVisualEn || 'the cute hand-drawn character from the doodle',
+          characterVisualEn: storyData.characterVisualEn || 'a cute charming storybook character',
           moral: storyData.moral,
           pages: storyData.pages.slice(0, 5).map((p, idx) => ({
             pageNumber: idx + 1,
@@ -1000,8 +918,10 @@
         document.getElementById('loading-overlay').classList.add('hidden');
         openReaderView();
 
-        if (apiKey) {
+        if (canGenerateIllustrations()) {
           generateAllPageIllustrations(book);
+        } else {
+          showToast('⚙️ 설정에서 Cloudflare Worker 주소를 입력하면 무료 FLUX 삽화가 자동 생성돼요!');
         }
       } catch (err) {
         document.getElementById('loading-overlay').classList.add('hidden');
@@ -1023,12 +943,12 @@
 {
   "title": "동화책 제목 (따뜻하고 시적인 한국어)",
   "characterSummary": "그림에서 발견한 주인공의 특징 한 줄 요약 (한국어)",
-  "characterVisualEn": "Detailed English visual description of the character from the doodle (shape, colors, accessories, expression) so an illustrator can keep it consistent across all 5 pages.",
+  "characterVisualEn": "Very specific English visual description of the character from the child's drawing (exact species or shape, body color, clothing/accessories, facial expression, cute simple proportions) so a text-to-image model can draw the exact same character consistently.",
   "moral": "아이에게 전하는 따뜻한 한 문장 교훈 (한국어)",
   "pages": [
     {
-      "text": "1페이지 본문 (한국어 2~3문장, 소리 내어 읽기 좋은 부드러운 해요체 또는 구연동화체)",
-      "scenePromptEn": "Vivid English illustration scene description for page 1 showing the character doing the action in a clear setting, no text in image."
+      "text": "1페이지 본문 (한국어 2~3문장, 소리 내어 읽기 좋은 부드러운 해요체)",
+      "scenePromptEn": "Vivid English picture-book scene description for page 1 including the character's action, background environment, lighting, and cozy mood. No text or words in the image."
     }
   ]
 }
@@ -1085,74 +1005,91 @@ pages 배열은 정확히 5개(기-승-전-결-여운)로 작성하세요.
           lastError = err.name === 'AbortError' ? new Error('응답 시간 초과 (25초)') : err;
         }
       }
-
       throw lastError || new Error('사용 가능한 Gemini 모델을 찾지 못했습니다.');
     }
 
+    // ==================== 통합 삽화 생성기 (Cloudflare FLUX 무료 / Gemini) ====================
+    async function generateIllustration(doodleDataUrl, scenePromptEn, styleId, characterVisualEn) {
+      if (getImgProvider() === 'cloudflare') {
+        return await callCloudflareFluxApi(scenePromptEn, styleId, characterVisualEn);
+      }
+      return await callGeminiImageApi(getApiKey(), doodleDataUrl, scenePromptEn, styleId, characterVisualEn);
+    }
+
+    async function callCloudflareFluxApi(scenePromptEn, styleId, characterVisualEn) {
+      const workerUrl = getCfWorkerUrl();
+      if (!workerUrl) throw new Error('⚙️ 설정에서 Cloudflare Worker 주소를 먼저 입력해 주세요.');
+
+      const styleObj = ART_STYLES[styleId] || ART_STYLES.ghibli90s;
+      const fullPrompt = `${styleObj.prompt} Main character: ${characterVisualEn}. Scene: ${scenePromptEn}. Wide horizontal storybook illustration, cohesive warm lighting, zero text or letters.`;
+
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 35000);
+      try {
+        const res = await fetch(workerUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          signal: controller.signal,
+          body: JSON.stringify({ prompt: fullPrompt, steps: 4 })
+        });
+        clearTimeout(timer);
+
+        const data = await res.json();
+        if (!res.ok || data.error) {
+          throw new Error(data.error || `Cloudflare Worker 오류 (${res.status})`);
+        }
+        if (!data.image) throw new Error('Worker 응답에 image 데이터가 없습니다.');
+
+        const mime = data.image.startsWith('iVBOR') ? 'image/png' : 'image/jpeg';
+        return await new Promise((resolve) => {
+          compressImageDataUrl(`data:${mime};base64,${data.image}`, 800, 0.84, resolve);
+        });
+      } catch (err) {
+        clearTimeout(timer);
+        if (err.name === 'AbortError') throw new Error('이미지 생성 시간 초과 (35초)');
+        throw err;
+      }
+    }
+
     async function callGeminiImageApi(apiKey, doodleDataUrl, scenePromptEn, styleId, characterVisualEn) {
+      if (!apiKey) throw new Error('Gemini API 키를 먼저 입력해 주세요.');
       const styleObj = ART_STYLES[styleId] || ART_STYLES.ghibli90s;
       const base64 = doodleDataUrl.split(',')[1];
       const mimeType = doodleDataUrl.startsWith('data:image/png') ? 'image/png' : 'image/jpeg';
+      const pref = getImgModelPref();
+      const candidates = pref === 'auto'
+        ? ['models/gemini-2.5-flash-image', 'models/gemini-2.0-flash-exp-image-generation']
+        : [`models/${pref}`];
 
-      const fullPrompt = [
-        `Create a horizontal 4:3 storybook illustration based on the attached child's doodle as the character reference.`,
-        `MAIN CHARACTER: ${characterVisualEn}. Keep the doodle's charming original silhouette, colors, and personality recognizable.`,
-        `SCENE TO ILLUSTRATE: ${scenePromptEn}.`,
-        `ART DIRECTION & MEDIUM: ${styleObj.prompt}`,
-        `COMPOSITION: Wide storybook spread composition, no borders, no speech bubbles, no text or letters anywhere in the image.`
-      ].join('\n');
-
-      const imgCandidates = await discoverImageModels(apiKey);
+      const fullPrompt = `Create a horizontal 4:3 storybook illustration based on the child's doodle. Character: ${characterVisualEn}. Scene: ${scenePromptEn}. Style: ${styleObj.prompt}`;
       let lastError = null;
 
-      for (const modelName of imgCandidates) {
+      for (const modelName of candidates) {
         try {
           const endpoint = `https://generativelanguage.googleapis.com/v1beta/${modelName}:generateContent?key=${encodeURIComponent(apiKey)}`;
           const res = await fetch(endpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              contents: [{
-                parts: [
-                  { text: fullPrompt },
-                  { inline_data: { mime_type: mimeType, data: base64 } }
-                ]
-              }],
-              generationConfig: {
-                responseModalities: ['IMAGE', 'TEXT']
-              }
+              contents: [{ parts: [{ text: fullPrompt }, { inline_data: { mime_type: mimeType, data: base64 } }] }],
+              generationConfig: { responseModalities: ['IMAGE', 'TEXT'] }
             })
           });
-
           const data = await res.json();
-          if (!res.ok || data.error) {
-            lastError = new Error(data.error?.message || `HTTP ${res.status}`);
-            continue;
-          }
-
+          if (!res.ok || data.error) { lastError = new Error(data.error?.message || `HTTP ${res.status}`); continue; }
           const parts = data.candidates?.[0]?.content?.parts || [];
           const imgPart = parts.find(p => p.inlineData?.data || p.inline_data?.data);
-          if (!imgPart) {
-            lastError = new Error('응답에 이미지가 포함되지 않았습니다.');
-            continue;
-          }
-
+          if (!imgPart) { lastError = new Error('이미지 응답 없음'); continue; }
           const rawB64 = imgPart.inlineData?.data || imgPart.inline_data?.data;
           const outMime = imgPart.inlineData?.mimeType || imgPart.inline_data?.mime_type || 'image/png';
-          return await new Promise((resolve) => {
-            compressImageDataUrl(`data:${outMime};base64,${rawB64}`, 800, 0.82, resolve);
-          });
-        } catch (err) {
-          lastError = err;
-        }
+          return await new Promise((resolve) => compressImageDataUrl(`data:${outMime};base64,${rawB64}`, 800, 0.82, resolve));
+        } catch (err) { lastError = err; }
       }
-
-      throw lastError || new Error('이미지 생성 모델 호출 실패');
+      throw lastError || new Error('Gemini 이미지 생성 실패');
     }
 
     async function generateAllPageIllustrations(book) {
-      const apiKey = getApiKey();
-      if (!apiKey || isGeneratingImages) return;
+      if (!canGenerateIllustrations() || isGeneratingImages) return;
       isGeneratingImages = true;
 
       for (let i = 0; i < book.pages.length; i++) {
@@ -1161,8 +1098,7 @@ pages 배열은 정확히 5개(기-승-전-결-여운)로 작성하세요.
 
         if (currentPageIdx === i + 1) renderCurrentPage();
         try {
-          const imgUrl = await callGeminiImageApi(
-            apiKey,
+          const imgUrl = await generateIllustration(
             book.originalDoodle,
             book.pages[i].scenePromptEn,
             book.styleId,
@@ -1175,6 +1111,8 @@ pages 배열은 정확히 5개(기-승-전-결-여운)로 작성하세요.
           }
         } catch (err) {
           console.warn(`Page ${i + 1} illustration failed:`, err);
+          if (i === 0) showToast('삽화 생성 오류: ' + err.message);
+          break;
         }
       }
       isGeneratingImages = false;
@@ -1183,9 +1121,8 @@ pages 배열은 정확히 5개(기-승-전-결-여운)로 작성하세요.
 
     async function regenerateCurrentIllustration() {
       if (!currentBook) return;
-      const apiKey = getApiKey();
-      if (!apiKey) {
-        showToast('⚙️ 설정에서 Gemini API 키를 먼저 입력해 주세요!');
+      if (!canGenerateIllustrations()) {
+        showToast('⚙️ 설정에서 Cloudflare Worker 주소를 먼저 입력해 주세요!');
         openSettings();
         return;
       }
@@ -1202,11 +1139,10 @@ pages 배열은 정확히 5개(기-승-전-결-여운)로 작성하세요.
 
       try {
         const scenePrompt = currentPageIdx === 0
-          ? `Enchanting storybook cover portrait of the protagonist in a peaceful, inviting meadow or cozy world matching the story titled "${currentBook.title}".`
+          ? `Enchanting storybook cover portrait of the protagonist in a peaceful meadow matching the story "${currentBook.title}".`
           : currentBook.pages[currentPageIdx - 1].scenePromptEn;
 
-        const newImg = await callGeminiImageApi(
-          apiKey,
+        const newImg = await generateIllustration(
           currentBook.originalDoodle,
           scenePrompt,
           currentBook.styleId,
@@ -1217,7 +1153,7 @@ pages 배열은 정확히 5개(기-승-전-결-여운)로 작성하세요.
         else currentBook.pages[currentPageIdx - 1].imageUrl = newImg;
 
         saveBookToLibrary(currentBook);
-        showToast('✨ 새로운 동화 삽화가 완성되었어요!');
+        showToast('✨ 고화질 동화 삽화가 완성되었어요!');
       } catch (err) {
         showToast('삽화 생성 실패: ' + err.message);
       } finally {
@@ -1230,14 +1166,14 @@ pages 배열은 정확히 5개(기-승-전-결-여운)로 작성하세요.
       return {
         title: `${name}의 반짝이는 산책길`,
         characterSummary: `호기심 가득한 눈을 가진 귀여운 친구 ${name}`,
-        characterVisualEn: `cute hand-drawn storybook character named ${name}`,
+        characterVisualEn: `a cute small round storybook creature named ${name} with bright curious eyes and a tiny yellow backpack`,
         moral: '작은 호기심 하나가 평범한 하루를 멋진 모험으로 바꿔준답니다.',
         pages: [
-          { text: `어느 맑은 아침, ${name}는 창문 밖으로 날아가는 노란 나비를 보았어요. "안녕, 나비야! 어디로 가는 거니?" ${name}는 작은 가방을 메고 조심스럽게 문을 열었답니다.`, scenePromptEn: 'A sunny morning doorway with a yellow butterfly fluttering outside.' },
-          { text: `풀잎에 맺힌 이슬방울을 지나 언덕에 오르자, 바람이 살랑살랑 노래를 불렀어요. ${name}는 풀밭에서 길을 잃은 아기 달팽이 한 마리를 발견했지요.`, scenePromptEn: 'A gentle green meadow hill with a tiny snail on a leaf.' },
-          { text: `"걱정 마, 내가 집까지 데려다줄게!" ${name}는 나뭇잎 우산을 씌워 주며 천천히, 아주 천천히 달팽이의 걸음에 맞추어 걸었어요.`, scenePromptEn: 'The character holding a leaf umbrella over a little snail along a sunlit dirt path.' },
-          { text: `얼마 지나지 않아 버섯 지붕 아래 달팽이 가족이 반갑게 손을 흔들었어요. 달팽이 엄마는 고마움의 표시로 반짝이는 솔방울을 선물해 주었답니다.`, scenePromptEn: 'A cozy mushroom house under tall trees with a happy snail family offering a pinecone.' },
-          { text: `노을이 주황빛으로 물들 무렵 집으로 돌아온 ${name}는 솔방울을 머리맡에 두었어요. 오늘 나눈 작은 친절 덕분에 밤하늘의 별들이 더욱 포근하게 빛났답니다.`, scenePromptEn: 'Warm sunset sky over a quiet cozy home with soft glowing stars.' }
+          { text: `어느 맑은 아침, ${name}는 창문 밖으로 날아가는 노란 나비를 보았어요. "안녕, 나비야! 어디로 가는 거니?" ${name}는 작은 가방을 메고 조심스럽게 문을 열었답니다.`, scenePromptEn: 'A sunny morning wooden cottage doorway with a yellow butterfly fluttering outside into a lush garden.' },
+          { text: `풀잎에 맺힌 이슬방울을 지나 언덕에 오르자, 바람이 살랑살랑 노래를 불렀어요. ${name}는 풀밭에서 길을 잃은 아기 달팽이 한 마리를 발견했지요.`, scenePromptEn: 'A gentle sunlit green meadow hill with morning dew and a tiny baby snail resting on a clover leaf.' },
+          { text: `"걱정 마, 내가 집까지 데려다줄게!" ${name}는 나뭇잎 우산을 씌워 주며 천천히, 아주 천천히 달팽이의 걸음에 맞추어 걸었어요.`, scenePromptEn: 'Walking slowly along a dappled forest dirt path holding a big green leaf umbrella over a tiny snail.' },
+          { text: `얼마 지나지 않아 버섯 지붕 아래 달팽이 가족이 반갑게 손을 흔들었어요. 달팽이 엄마는 고마움의 표시로 반짝이는 솔방울을 선물해 주었답니다.`, scenePromptEn: 'A cozy little mushroom cottage under tall trees where a happy snail family waves warmly holding a golden pinecone.' },
+          { text: `노을이 주황빛으로 물들 무렵 집으로 돌아온 ${name}는 솔방울을 머리맡에 두었어요. 오늘 나눈 작은 친절 덕분에 밤하늘의 별들이 더욱 포근하게 빛났답니다.`, scenePromptEn: 'A peaceful warm amber sunset over a quiet cozy hillside cottage as the first stars appear in the evening sky.' }
         ]
       };
     }
@@ -1288,8 +1224,7 @@ pages 배열은 정확히 5개(기-승-전-결-여운)로 작성하세요.
       const regenBtn = document.getElementById('regen-img-btn');
 
       if (isCover) {
-        const coverSrc = currentBook.coverImage || currentBook.originalDoodle;
-        imgEl.src = coverSrc;
+        imgEl.src = currentBook.coverImage || currentBook.originalDoodle;
         imgEl.classList.remove('hidden');
         loader.classList.add('hidden');
         regenBtn.textContent = currentBook.coverImage ? '🎨 표지 다시 그리기' : '✨ 표지도 AI 삽화로 변신';
@@ -1306,7 +1241,7 @@ pages 배열은 정확히 5개(기-승-전-결-여운)로 작성하세요.
           imgEl.src = page.imageUrl;
           imgEl.classList.remove('hidden');
           loader.classList.add('hidden');
-        } else if (getApiKey() && isGeneratingImages) {
+        } else if (canGenerateIllustrations() && isGeneratingImages) {
           imgEl.classList.add('hidden');
           loader.classList.remove('hidden');
           loaderText.textContent = `${currentPageIdx}페이지 ${styleObj.short} 삽화를 그리는 중...`;
@@ -1495,7 +1430,6 @@ pages 배열은 정확히 5개(기-승-전-결-여운)로 작성하세요.
         g.font = 'bold 62px "Gowun Batang", serif';
         g.textAlign = 'center';
         drawWrappedText(g, book.title, W / 2, 955, W - 210, 82, 'center');
-
         g.fillStyle = '#6E5034';
         g.font = '32px "Gowun Batang", serif';
         drawWrappedText(g, book.characterSummary, W / 2, 1135, W - 240, 48, 'center');
@@ -1574,9 +1508,7 @@ pages 배열은 정확히 5개(기-승-전-결-여운)로 작성하세요.
       document.getElementById('card-modal').classList.remove('hidden');
     }
 
-    function closeCardModal() {
-      document.getElementById('card-modal').classList.add('hidden');
-    }
+    function closeCardModal() { document.getElementById('card-modal').classList.add('hidden'); }
 
     function triggerDownload(dataUrl, filename) {
       const a = document.createElement('a');
@@ -1615,11 +1547,8 @@ pages 배열은 정확히 5개(기-승-전-결-여운)로 작성하세요.
 
     // ==================== 내 동화 서재 ====================
     function loadLibrary() {
-      try {
-        library = JSON.parse(localStorage.getItem('atelier_storybook_library_v2') || '[]');
-      } catch (e) {
-        library = [];
-      }
+      try { library = JSON.parse(localStorage.getItem('atelier_storybook_library_v2') || '[]'); }
+      catch (e) { library = []; }
       updateLibraryBadge();
     }
 
@@ -1633,10 +1562,7 @@ pages 배열은 정확히 5개(기-승-전-결-여운)로 작성하세요.
       } catch (e) {
         while (library.length > 1) {
           library.pop();
-          try {
-            localStorage.setItem('atelier_storybook_library_v2', JSON.stringify(library));
-            break;
-          } catch (e2) {}
+          try { localStorage.setItem('atelier_storybook_library_v2', JSON.stringify(library)); break; } catch (e2) {}
         }
       }
       updateLibraryBadge();
@@ -1714,13 +1640,19 @@ pages 배열은 정확히 5개(기-승-전-결-여운)로 작성하세요.
       document.getElementById('view-reader').classList.add('hidden');
 
       document.getElementById('tab-studio').className = tab === 'studio'
-        ? 'px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-600 text-white shadow transition'
-        : 'px-3 py-1.5 rounded-xl text-xs font-bold bg-stone-800 text-amber-200/80 border border-amber-700/30 transition';
+        ? 'px-2.5 py-1.5 rounded-xl text-xs font-bold bg-amber-600 text-white shadow transition'
+        : 'px-2.5 py-1.5 rounded-xl text-xs font-bold bg-stone-800 text-amber-200/80 border border-amber-700/30 transition';
       document.getElementById('tab-library').className = tab === 'library'
-        ? 'px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-600 text-white shadow transition relative'
-        : 'px-3 py-1.5 rounded-xl text-xs font-bold bg-stone-800 text-amber-200/80 border border-amber-700/30 transition relative';
+        ? 'px-2.5 py-1.5 rounded-xl text-xs font-bold bg-amber-600 text-white shadow transition relative'
+        : 'px-2.5 py-1.5 rounded-xl text-xs font-bold bg-stone-800 text-amber-200/80 border border-amber-700/30 transition relative';
 
       if (tab === 'library') renderLibrary();
+    }
+
+    function toggleProviderFields() {
+      const p = document.getElementById('input-img-provider').value;
+      document.getElementById('field-cloudflare').classList.toggle('hidden', p !== 'cloudflare');
+      document.getElementById('field-gemini-img').classList.toggle('hidden', p !== 'gemini');
     }
 
     function toggleCustomModelInput() {
@@ -1729,40 +1661,40 @@ pages 배열은 정확히 5개(기-승-전-결-여운)로 작성하세요.
     }
 
     function openSettings() {
+      document.getElementById('input-img-provider').value = getImgProvider();
+      document.getElementById('input-cf-worker-url').value = getCfWorkerUrl();
       document.getElementById('input-api-key').value = getApiKey();
       document.getElementById('input-story-model').value = getStoryModelPref();
       document.getElementById('input-custom-story-model').value = getCustomStoryModel();
       document.getElementById('input-img-model').value = getImgModelPref();
+      toggleProviderFields();
       toggleCustomModelInput();
       document.getElementById('settings-modal').classList.remove('hidden');
     }
 
-    function closeSettings() {
-      document.getElementById('settings-modal').classList.add('hidden');
-    }
+    function closeSettings() { document.getElementById('settings-modal').classList.add('hidden'); }
 
     function saveSettings() {
-      const key = document.getElementById('input-api-key').value.trim();
-      const storyModel = document.getElementById('input-story-model').value;
-      const customStoryModel = document.getElementById('input-custom-story-model').value.trim();
-      const imgModel = document.getElementById('input-img-model').value;
+      localStorage.setItem('atelier_img_provider', document.getElementById('input-img-provider').value);
+      localStorage.setItem('atelier_cf_worker_url', document.getElementById('input-cf-worker-url').value.trim().replace(/\/$/, ''));
+      localStorage.setItem('atelier_gemini_api_key', document.getElementById('input-api-key').value.trim());
+      localStorage.setItem('atelier_story_model', document.getElementById('input-story-model').value);
+      localStorage.setItem('atelier_custom_story_model', document.getElementById('input-custom-story-model').value.trim());
+      localStorage.setItem('atelier_img_model', document.getElementById('input-img-model').value);
 
-      localStorage.setItem('atelier_gemini_api_key', key);
-      localStorage.setItem('atelier_story_model', storyModel);
-      localStorage.setItem('atelier_custom_story_model', customStoryModel);
-      localStorage.setItem('atelier_img_model', imgModel);
-
-      checkApiKeyNotice();
+      checkSetupNotice();
       updateModelBadge();
       closeSettings();
-      showToast('✅ API 키와 모델 설정이 저장되었습니다!');
+      showToast('✅ 설정이 저장되었습니다!');
     }
 
     function clearApiKey() {
       localStorage.removeItem('atelier_gemini_api_key');
+      localStorage.removeItem('atelier_cf_worker_url');
       document.getElementById('input-api-key').value = '';
-      checkApiKeyNotice();
-      showToast('API 키가 삭제되었습니다.');
+      document.getElementById('input-cf-worker-url').value = '';
+      checkSetupNotice();
+      showToast('API 키와 Worker 주소가 초기화되었습니다.');
     }
 
     init();
