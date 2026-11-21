@@ -142,7 +142,7 @@
         <div class="min-w-0">
           <div class="flex items-center gap-1.5 flex-wrap">
             <h1 class="font-title text-base sm:text-lg text-amber-100 leading-tight tracking-wide truncate">낙서 동화책 아틀리에</h1>
-            <span id="active-model-badge" class="text-[9px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 px-1.5 py-0.5 rounded-full shrink-0">FLUX 연동</span>
+            <span id="active-model-badge" class="text-[9px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 px-1.5 py-0.5 rounded-full shrink-0">일관성 Lock</span>
           </div>
           <p class="text-[10.5px] text-amber-300/75 truncate">낙서가 AI 그림동화책으로 피어나는 곳</p>
         </div>
@@ -243,7 +243,7 @@
         <!-- STEP 2: 화풍 & 주인공 이름 -->
         <div class="space-y-4">
           <div>
-            <span class="inline-block text-[11px] font-bold text-amber-800 bg-amber-200/70 px-2.5 py-0.5 rounded-full mb-1.5">STEP 2 · 동화책 화풍 고르기</span>
+            <span class="inline-block text-[11px] font-bold text-amber-800 bg-amber-200/70 px-2.5 py-0.5 rounded-full mb-1.5">STEP 2 · 동화책 화풍 고르기 (5페이지 동일 고정)</span>
             <div id="style-selector" class="grid grid-cols-2 gap-2"></div>
           </div>
 
@@ -268,14 +268,14 @@
           </button>
 
           <p id="setup-notice" class="hidden text-[11px] text-center text-amber-900 bg-amber-200/60 border border-amber-400/50 rounded-xl px-3 py-2 leading-relaxed">
-            🔑 우측 상단 <b>⚙️ 설정</b>에서 <b>Gemini API 키</b>(스토리용)와 <b>Cloudflare Worker 주소</b>(무료 고화질 FLUX 삽화용)를 입력해 주세요.
+            🔑 우측 상단 <b>⚙️ 설정</b>에서 <b>Gemini API 키</b>(1단계 스토리용)와 <b>Cloudflare Worker 주소</b>(2단계 무료 FLUX 삽화용)를 입력해 주세요.
           </p>
         </div>
       </div>
     </section>
 
     <!-- ==================== 2. 동화책 뷰어 ==================== -->
-    <section id="view-reader" class="hidden space-y-4">
+    <section id="view-reader" class="hidden space-y-3.5">
       <div class="flex items-center justify-between text-amber-100">
         <button onclick="closeReader()" class="px-3 py-1.5 rounded-xl bg-stone-800/90 border border-amber-700/40 text-xs font-bold hover:bg-stone-700 transition">
           ← 아틀리에로
@@ -286,6 +286,35 @@
         </button>
       </div>
 
+      <!-- ★ 2단계 삽화 생성 실시간 진행률 패널 (1/5 ~ 5/5) ★ -->
+      <div id="illus-progress-panel" class="hidden bg-[#1F140E]/95 border border-amber-600/45 rounded-2xl p-3.5 text-amber-100 space-y-2.5 shadow-lg">
+        <div class="flex items-center justify-between gap-2">
+          <div class="flex items-center gap-2 min-w-0">
+            <span id="illus-status-spinner" class="w-4 h-4 border-2 border-amber-400 border-t-transparent rounded-full animate-spin shrink-0"></span>
+            <span id="illus-status-icon" class="hidden text-sm shrink-0">✅</span>
+            <p id="illus-status-text" class="text-xs font-bold text-amber-200 truncate">
+              2단계 삽화 생성 중... (0/5 완료)
+            </p>
+          </div>
+          <span id="illus-count-badge" class="shrink-0 text-xs font-extrabold bg-amber-600/30 border border-amber-400/50 text-amber-200 px-2 py-0.5 rounded-full">
+            0 / 5
+          </span>
+        </div>
+
+        <div class="w-full h-2 bg-stone-800 rounded-full overflow-hidden border border-amber-900/50">
+          <div id="illus-progress-bar" class="h-full bg-gradient-to-r from-amber-500 to-emerald-400 rounded-full transition-all duration-500" style="width: 0%"></div>
+        </div>
+
+        <div id="illus-step-chips" class="grid grid-cols-5 gap-1.5"></div>
+
+        <div id="illus-retry-row" class="hidden flex items-center justify-between gap-2 pt-0.5">
+          <p id="illus-error-msg" class="text-[11px] text-rose-300 truncate"></p>
+          <button onclick="resumeRemainingIllustrations()" class="shrink-0 px-3 py-1 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-[11px] font-bold shadow active:scale-95 transition">
+            🔄 남은 삽화 이어 그리기
+          </button>
+        </div>
+      </div>
+
       <!-- 양장본 책 페이지 본체 -->
       <div class="book-stage">
         <div id="book-page-card" class="parchment-page gold-frame rounded-3xl p-5 relative overflow-hidden min-h-[540px] flex flex-col justify-between">
@@ -293,7 +322,10 @@
 
           <div class="flex items-center justify-between pr-8 mb-3">
             <span id="page-badge" class="text-[11px] font-bold text-amber-900 bg-amber-200/80 px-2.5 py-0.5 rounded-full">표지</span>
-            <span id="style-badge" class="text-[11px] text-stone-500 font-medium"></span>
+            <div class="flex items-center gap-1.5">
+              <span id="seed-lock-badge" class="text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 px-1.5 py-0.5 rounded-full" title="책 전체 주인공·화풍 고정 시드">🔒 시드고정</span>
+              <span id="style-badge" class="text-[11px] text-stone-500 font-medium"></span>
+            </div>
           </div>
 
           <div class="relative rounded-2xl overflow-hidden border-2 border-[#C8A45D] bg-[#EFE6D2] aspect-[4/3] flex items-center justify-center shadow-inner mb-4">
@@ -319,10 +351,13 @@
             </div>
           </div>
 
-          <div class="mt-4 pt-3 border-t border-[#DFCFAF]">
-            <div class="flex items-center justify-between mb-1.5">
-              <span class="text-[11px] font-bold text-stone-600">🎨 화풍 바꿔 다시 그리기</span>
-              <span class="text-[10px] text-stone-500">선택 후 [다시 그리기]를 누르세요</span>
+          <!-- 뷰어 내 화풍 통일 전환 & 주인공 외형 고정집 버튼 -->
+          <div class="mt-4 pt-3 border-t border-[#DFCFAF] space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] font-bold text-stone-600">🎨 화풍 & 주인공 일관성</span>
+              <button onclick="openBibleModal()" class="text-[10.5px] font-bold text-amber-900 bg-amber-200/80 hover:bg-amber-300/80 px-2.5 py-1 rounded-lg transition">
+                🔒 주인공 외형·화풍 고정집
+              </button>
             </div>
             <div id="viewer-style-bar" class="flex gap-1.5 overflow-x-auto scrollbar-none pb-0.5"></div>
           </div>
@@ -379,14 +414,57 @@
 
   </main>
 
-  <!-- ==================== 로딩 오버레이 ==================== -->
+  <!-- ==================== 로딩 오버레이 (1단계 스토리 + 캐릭터 설정집 생성) ==================== -->
   <div id="loading-overlay" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-5">
     <div class="parchment-page gold-frame rounded-3xl p-7 max-w-xs w-full text-center space-y-4">
       <div class="w-12 h-12 mx-auto border-4 border-amber-700 border-t-transparent rounded-full animate-spin"></div>
+      <span class="inline-block text-[11px] font-bold bg-amber-200 text-amber-900 px-2.5 py-0.5 rounded-full">1단계 · 스토리 & 캐릭터 설정집 작성</span>
       <h3 class="font-title text-xl text-stone-900" id="loading-title">낙서에 생명을 불어넣는 중...</h3>
       <p class="font-story text-xs text-stone-600 leading-relaxed" id="loading-desc">
-        그림 속 주인공의 표정과 색깔을 살펴보고<br />5장짜리 따뜻한 동화를 쓰고 있어요.
+        주인공의 외형·옷차림·색감을 고정하고<br />5장짜리 따뜻한 동화를 쓰고 있어요.
       </p>
+    </div>
+  </div>
+
+  <!-- ==================== ★ 주인공 외형·화풍 고정집 (Character Bible) 모달 ★ ==================== -->
+  <div id="bible-modal" onclick="if(event.target===this) closeBibleModal()" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="parchment-page gold-frame rounded-3xl max-w-sm w-full p-5 space-y-3.5 shadow-2xl max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-[#DFCFAF] pb-2">
+        <h3 class="font-title text-lg text-stone-900">🔒 주인공·화풍 일관성 고정집</h3>
+        <button onclick="closeBibleModal()" class="text-stone-500 text-lg">✕</button>
+      </div>
+
+      <p class="text-[11px] text-stone-600 leading-relaxed">
+        아래 <b>고정 외형·색감·시드 번호</b>가 1~5페이지 모든 삽화 프롬프트 맨 앞에 똑같이 들어가 그림체와 주인공을 통일합니다.
+      </p>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block font-bold text-stone-800 mb-1">주인공 고정 외형 묘사 (영문)</label>
+          <textarea id="bible-char-en" rows="3" class="w-full bg-white border border-[#D4BC8B] rounded-xl px-3 py-2 text-[11.5px] text-stone-800 outline-none focus:ring-2 focus:ring-amber-600"></textarea>
+        </div>
+
+        <div>
+          <label class="block font-bold text-stone-800 mb-1">책 전체 색감·조명 톤 (영문)</label>
+          <input type="text" id="bible-palette-en" class="w-full bg-white border border-[#D4BC8B] rounded-xl px-3 py-2 text-[11.5px] text-stone-800 outline-none focus:ring-2 focus:ring-amber-600" />
+        </div>
+
+        <div class="flex items-center justify-between gap-2 bg-amber-100/70 border border-amber-300 rounded-xl px-3 py-2">
+          <div>
+            <span class="block font-bold text-amber-950 text-[11px]">고정 시드(Seed) 번호</span>
+            <span class="text-[10px] text-stone-600">5장 모두 같은 시드로 그려 화풍을 묶습니다</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <input type="number" id="bible-seed" class="w-20 bg-white border border-[#D4BC8B] rounded-lg px-2 py-1 text-xs font-bold text-center" />
+            <button onclick="randomizeBibleSeed()" class="px-2 py-1 rounded-lg bg-amber-700 text-white text-[10px] font-bold">🎲</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2 pt-1">
+        <button onclick="saveBibleOnly()" class="py-2.5 rounded-xl bg-stone-200 text-stone-800 font-bold text-xs">설정만 저장</button>
+        <button onclick="saveBibleAndRegenAll()" class="py-2.5 rounded-xl bg-amber-700 hover:bg-amber-600 text-white font-bold text-xs shadow">🔄 5장 전체 통일 다시 그리기</button>
+      </div>
     </div>
   </div>
 
@@ -416,9 +494,8 @@
       </div>
 
       <div class="space-y-3.5 text-xs">
-        <!-- 1. 무료 삽화 엔진 (Cloudflare Workers AI) -->
         <div class="bg-amber-100/70 border border-amber-400/50 rounded-2xl p-3 space-y-2">
-          <label class="block font-bold text-amber-950">🎨 삽화 생성 엔진</label>
+          <label class="block font-bold text-amber-950">🎨 2단계 삽화 생성 엔진</label>
           <select id="input-img-provider" onchange="toggleProviderFields()" class="w-full bg-white border border-[#D4BC8B] rounded-xl px-3 py-2 text-stone-800 outline-none font-bold">
             <option value="cloudflare">⚡ Cloudflare Workers AI (FLUX 매일 무료 · 추천)</option>
             <option value="gemini">💎 Gemini 이미지 모델 (유료 결제 계정용)</option>
@@ -442,9 +519,8 @@
           </div>
         </div>
 
-        <!-- 2. 동화 스토리 엔진 (Gemini 무료) -->
         <div class="space-y-2">
-          <label class="block font-bold text-stone-800">🔑 Gemini API Key (낙서 분석 & 동화 작성용 · 무료)</label>
+          <label class="block font-bold text-stone-800">🔑 Gemini API Key (1단계 스토리 작성용 · 무료)</label>
           <input type="password" id="input-api-key" placeholder="AIzaSy... 형태의 키 입력" class="w-full bg-white border border-[#D4BC8B] rounded-xl px-3 py-2 text-stone-800 outline-none focus:ring-2 focus:ring-amber-600" />
           <p class="text-[10.5px] text-stone-500 leading-relaxed">
             키는 내 기기(localStorage)에만 보관됩니다.
@@ -504,35 +580,35 @@
       deferredInstallPrompt = null;
     }
 
-    // ==================== 아날로그 동화 화풍 프리셋 (FLUX & Gemini 최적화) ====================
+    // ==================== 아날로그 동화 화풍 고정 프리셋 (일관성 최적화) ====================
     const ART_STYLES = {
       ghibli90s: {
         id: 'ghibli90s',
         label: '🌿 90s 지브리 셀애니',
         short: '90s 지브리',
         desc: '1990년대 손그림 셀 & 포스터컬러',
-        prompt: "Authentic 1990s Japanese hand-painted theatrical cel animation still, Nicker poster color and matte gouache painted background with visible soft brushwork, earthy greens, warm cream sky, dappled sunlight through trees, dark sepia hand-inked outlines, flat 2-tone cel shading, subtle 35mm film grain, cozy nostalgic everyday warmth, no 3D, no glossy plastic, no neon glow, no text."
+        prompt: "1990s Japanese hand-painted theatrical cel animation film still, consistent anime character sheet design, hand-painted matte Nicker poster color and gouache background, fine dark sepia ink lineart, flat 2-tone cel shading, subtle 35mm film grain, cozy nostalgic everyday warmth, no 3D, no glossy plastic, no neon glow, no text"
       },
       watercolor: {
         id: 'watercolor',
         label: '🎨 수채화 그림책',
         short: '수채화',
         desc: '면지 수채 번짐 & 연필 밑그림',
-        prompt: "Classic European children's picture book illustration hand-painted in soft transparent watercolor on textured cold-pressed cotton paper, gentle pigment blooms, delicate graphite pencil outlines, warm muted storybook palette, airy cozy composition, no 3D CGI, no digital gloss, no text."
+        prompt: "Classic European children's picture book illustration by a single illustrator, consistent hand-drawn character design, soft transparent watercolor on cold-pressed cotton paper, delicate graphite pencil outlines, gentle pigment blooms, no 3D CGI, no digital gloss, no text"
       },
       crayon: {
         id: 'crayon',
         label: '🖍️ 파스텔 크레용',
         short: '크레용',
         desc: '스케치북 왁스 크레용 손맛',
-        prompt: "Handmade children's picture book illustration drawn with wax crayons, oil pastels, and colored pencils on textured cream sketchbook paper, tactile waxy strokes, playful hand-drawn charm, warm nostalgic tones, no 3D render, no glossy airbrush, no text."
+        prompt: "Handmade children's picture book illustration by a single artist, consistent wax crayon and colored pencil character design on textured cream sketchbook paper, tactile waxy strokes, cozy nostalgic hand-drawn warmth, no 3D render, no glossy airbrush, no text"
       },
       nightsky: {
         id: 'nightsky',
         label: '🌙 밤하늘 과슈 동화',
         short: '밤하늘',
         desc: '매트한 과슈와 색연필 잠자리 동화',
-        prompt: "Cozy bedtime children's picture book illustration painted in matte opaque gouache and colored pencils, deep velvety indigo night sky, warm honey-yellow moonlight and soft starlight, serene comforting atmosphere, no neon laser glow, no 3D CGI, no text."
+        prompt: "Cozy bedtime children's picture book illustration by a single artist, consistent character design painted in matte opaque gouache and colored pencils, deep velvety indigo night sky, warm honey-yellow moonlight, serene comforting atmosphere, no neon glow, no 3D CGI, no text"
       }
     };
 
@@ -556,7 +632,10 @@
     let ttsRate = 0.95;
     let isAutoReading = false;
     let library = [];
+
     let isGeneratingImages = false;
+    let activeGeneratingPage = 0;
+    let illusErrorText = '';
 
     const canvas = document.getElementById('draw-canvas');
     const ctx = canvas.getContext('2d');
@@ -605,12 +684,151 @@
 
     function updateModelBadge(resolvedName) {
       const badge = document.getElementById('active-model-badge');
-      const imgTag = getImgProvider() === 'cloudflare' ? 'FLUX' : 'G-Img';
+      const imgTag = getImgProvider() === 'cloudflare' ? 'FLUX·Lock' : 'G-Img·Lock';
       if (resolvedName) {
         badge.textContent = `${resolvedName.replace('models/', '').replace('gemini-', 'G')} · ${imgTag}`;
         return;
       }
-      badge.textContent = getImgProvider() === 'cloudflare' ? '무료 FLUX' : 'Gemini';
+      badge.textContent = getImgProvider() === 'cloudflare' ? 'FLUX·일관성Lock' : 'Gemini·Lock';
+    }
+
+    // ==================== 2단계 삽화 진행률 패널 ====================
+    function renderIllusProgressPanel() {
+      const panel = document.getElementById('illus-progress-panel');
+      if (!currentBook) {
+        panel.classList.add('hidden');
+        return;
+      }
+
+      const total = currentBook.pages.length;
+      const doneCount = currentBook.pages.filter(p => !!p.imageUrl).length;
+      const pct = Math.round((doneCount / total) * 100);
+
+      const shouldShow = isGeneratingImages || doneCount < total || window._justCompletedBookId === currentBook.id;
+      panel.classList.toggle('hidden', !shouldShow);
+      if (!shouldShow) return;
+
+      const spinner = document.getElementById('illus-status-spinner');
+      const icon = document.getElementById('illus-status-icon');
+      const statusText = document.getElementById('illus-status-text');
+      const countBadge = document.getElementById('illus-count-badge');
+      const bar = document.getElementById('illus-progress-bar');
+      const retryRow = document.getElementById('illus-retry-row');
+      const errorMsg = document.getElementById('illus-error-msg');
+      const chipsBox = document.getElementById('illus-step-chips');
+
+      countBadge.textContent = `${doneCount} / ${total}`;
+      bar.style.width = `${pct}%`;
+
+      if (isGeneratingImages) {
+        spinner.classList.remove('hidden');
+        icon.classList.add('hidden');
+        retryRow.classList.add('hidden');
+        statusText.textContent = activeGeneratingPage > 0
+          ? `2단계 통일 삽화 생성 중... (${doneCount}/${total} 완료 · ${activeGeneratingPage}장)`
+          : `2단계 삽화 준비 중... (${doneCount}/${total})`;
+      } else if (doneCount === total) {
+        spinner.classList.add('hidden');
+        icon.classList.remove('hidden');
+        icon.textContent = '✨';
+        retryRow.classList.add('hidden');
+        statusText.textContent = `2단계 완료! 같은 그림체·주인공으로 ${total}/${total} 완성`;
+      } else {
+        spinner.classList.add('hidden');
+        icon.classList.remove('hidden');
+        icon.textContent = '⏸️';
+        statusText.textContent = `삽화 ${doneCount}/${total} 완료 (${total - doneCount}페이지 남음)`;
+        retryRow.classList.remove('hidden');
+        errorMsg.textContent = illusErrorText || (canGenerateIllustrations() ? '남은 페이지를 이어서 그릴 수 있어요' : '⚙️ 설정에서 Worker 주소를 입력해 주세요');
+      }
+
+      chipsBox.innerHTML = currentBook.pages.map((p, idx) => {
+        const pageNum = idx + 1;
+        const isDone = !!p.imageUrl;
+        const isNow = isGeneratingImages && activeGeneratingPage === pageNum;
+        const isViewing = currentPageIdx === pageNum;
+
+        let cls = 'bg-stone-800/80 text-stone-400 border-stone-700';
+        let mark = '대기';
+        if (isDone) {
+          cls = 'bg-emerald-900/50 text-emerald-300 border-emerald-500/50';
+          mark = '완료✓';
+        } else if (isNow) {
+          cls = 'bg-amber-600/40 text-amber-200 border-amber-400 animate-pulse';
+          mark = '그리는중';
+        }
+
+        return `
+          <button onclick="jumpToPage(${pageNum})"
+            class="py-1 px-1 rounded-xl border text-[10px] font-bold flex flex-col items-center justify-center transition ${cls} ${isViewing ? 'ring-2 ring-amber-300' : ''}">
+            <span>${pageNum}장</span>
+            <span class="text-[9px] opacity-90">${mark}</span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function resumeRemainingIllustrations() {
+      if (!currentBook) return;
+      if (!canGenerateIllustrations()) {
+        showToast('⚙️ 설정에서 Cloudflare Worker 주소를 먼저 입력해 주세요!');
+        openSettings();
+        return;
+      }
+      illusErrorText = '';
+      generateAllPageIllustrations(currentBook);
+    }
+
+    // ==================== ★ 주인공·화풍 고정집 (Character Bible) 모달 ====================
+    function openBibleModal() {
+      if (!currentBook) return;
+      if (!currentBook.seed) currentBook.seed = Math.floor(Math.random() * 899999) + 100000;
+      document.getElementById('bible-char-en').value = currentBook.characterVisualEn || '';
+      document.getElementById('bible-palette-en').value = currentBook.worldPaletteEn || 'warm cream, soft sage green, muted ochre, gentle sunlit storybook palette';
+      document.getElementById('bible-seed').value = currentBook.seed;
+      document.getElementById('bible-modal').classList.remove('hidden');
+    }
+
+    function closeBibleModal() {
+      document.getElementById('bible-modal').classList.add('hidden');
+    }
+
+    function randomizeBibleSeed() {
+      document.getElementById('bible-seed').value = Math.floor(Math.random() * 899999) + 100000;
+    }
+
+    function applyBibleInputs() {
+      if (!currentBook) return;
+      currentBook.characterVisualEn = document.getElementById('bible-char-en').value.trim() || currentBook.characterVisualEn;
+      currentBook.worldPaletteEn = document.getElementById('bible-palette-en').value.trim() || 'warm pastel storybook palette';
+      const parsedSeed = parseInt(document.getElementById('bible-seed').value, 10);
+      currentBook.seed = Number.isFinite(parsedSeed) && parsedSeed > 0 ? parsedSeed : Math.floor(Math.random() * 899999) + 100000;
+      saveBookToLibrary(currentBook);
+    }
+
+    function saveBibleOnly() {
+      applyBibleInputs();
+      closeBibleModal();
+      renderCurrentPage();
+      showToast('🔒 주인공·시드 고정 설정이 저장되었습니다.');
+    }
+
+    function saveBibleAndRegenAll() {
+      if (!canGenerateIllustrations()) {
+        showToast('⚙️ 설정에서 Cloudflare Worker 주소를 먼저 입력해 주세요!');
+        closeBibleModal();
+        openSettings();
+        return;
+      }
+      applyBibleInputs();
+      // 1~5페이지 이미지를 비우고 같은 시드·고정 외형으로 5장 전체 일괄 재생성
+      currentBook.pages.forEach(p => { p.imageUrl = ''; p.regenCount = 0; });
+      window._justCompletedBookId = null;
+      saveBookToLibrary(currentBook);
+      closeBibleModal();
+      renderCurrentPage();
+      showToast('🎨 고정된 주인공·화풍으로 5장을 새로 통일해 그립니다!');
+      generateAllPageIllustrations(currentBook);
     }
 
     // ==================== 스케치북 캔버스 ====================
@@ -817,7 +1035,7 @@
       saveBookToLibrary(currentBook);
       renderViewerStyleBar();
       document.getElementById('style-badge').textContent = ART_STYLES[id].label;
-      showToast(`${ART_STYLES[id].short} 화풍으로 변경됨! [다시 그리기]를 눌러 적용하세요.`);
+      showToast(`${ART_STYLES[id].short} 화풍 선택! [다시 그리기] 또는 [고정집 → 5장 전체 다시 그리기]를 누르세요.`);
     }
 
     // ==================== Gemini 최신 모델 자동 탐색 ====================
@@ -863,7 +1081,7 @@
       return [...new Set(candidates)];
     }
 
-    // ==================== 스토리 & 삽화 생성 ====================
+    // ==================== 1단계 스토리 & 캐릭터 고정 설정집 생성 ====================
     async function generateStorybook() {
       const rawImage = inputMode === 'upload' ? uploadedImageDataUrl : canvas.toDataURL('image/jpeg', 0.85);
       if (inputMode === 'upload' && !uploadedImageDataUrl) {
@@ -880,8 +1098,8 @@
       const apiKey = getApiKey();
 
       document.getElementById('loading-overlay').classList.remove('hidden');
-      document.getElementById('loading-title').textContent = '낙서에 생명을 불어넣는 중...';
-      document.getElementById('loading-desc').innerHTML = '그림 속 주인공의 색과 표정을 읽어내어<br>5장짜리 따뜻한 동화를 쓰고 있어요.';
+      document.getElementById('loading-title').textContent = '주인공 설정집 & 동화 쓰는 중...';
+      document.getElementById('loading-desc').innerHTML = '매 페이지 주인공과 그림체가 같아지도록<br>고정 외형·색감을 설계하고 있어요.';
 
       try {
         let storyData;
@@ -897,30 +1115,37 @@
           id: 'book_' + Date.now(),
           createdAt: new Date().toLocaleDateString('ko-KR'),
           styleId: selectedStyle,
+          seed: Math.floor(Math.random() * 899999) + 100000, // 책 전용 고정 시드
           originalDoodle: rawImage,
           coverImage: '',
           title: storyData.title,
           characterSummary: storyData.characterSummary,
-          characterVisualEn: storyData.characterVisualEn || 'a cute charming storybook character',
+          characterVisualEn: storyData.characterVisualEn || 'a cute small round storybook creature with bright eyes wearing a red scarf',
+          worldPaletteEn: storyData.worldPaletteEn || 'warm cream, soft sage green, muted ochre, gentle sunlit storybook color palette',
           moral: storyData.moral,
           pages: storyData.pages.slice(0, 5).map((p, idx) => ({
             pageNumber: idx + 1,
             text: p.text,
             scenePromptEn: p.scenePromptEn,
-            imageUrl: ''
+            imageUrl: '',
+            regenCount: 0
           }))
         };
 
         currentBook = book;
         currentPageIdx = 0;
+        illusErrorText = '';
+        window._justCompletedBookId = null;
         saveBookToLibrary(book);
 
         document.getElementById('loading-overlay').classList.add('hidden');
         openReaderView();
 
         if (canGenerateIllustrations()) {
+          showToast('📖 1단계 완성! 고정된 주인공·화풍으로 2단계 삽화(1/5~5/5)를 그립니다.');
           generateAllPageIllustrations(book);
         } else {
+          renderIllusProgressPanel();
           showToast('⚙️ 설정에서 Cloudflare Worker 주소를 입력하면 무료 FLUX 삽화가 자동 생성돼요!');
         }
       } catch (err) {
@@ -934,21 +1159,27 @@
       const mimeType = dataUrl.startsWith('data:image/png') ? 'image/png' : 'image/jpeg';
 
       const prompt = `
-당신은 따뜻하고 상상력 풍부한 한국어 동화 작가입니다.
+당신은 따뜻하고 상상력 풍부한 한국어 동화 작가이자 그림책 아트 디렉터입니다.
 사용자가 그린 그림(낙서)을 자세히 관찰하고, 이 그림 속 존재를 주인공으로 하는 5페이지 분량의 그림동화책을 만들어 주세요.
 - 분위기/연령: ${tone}
 - 주인공 이름 요청: ${heroName ? heroName : '그림의 생김새와 색깔에 어울리는 사랑스러운 이름을 지어주세요'}
+
+[매우 중요 — 5페이지 전체의 주인공과 그림체 통일 규칙]
+1. characterVisualEn에는 주인공의 변하지 않는 고정 외형(종류/체형/색상/눈코입/항상 입고 있는 고정 옷과 색깔/고정 소품 1개)을 영어로 25~35단어로 아주 구체적으로 못 박아 적으세요. (예: "a small round cream-colored bear cub with tiny round ears, dot eyes, wearing a knitted red scarf and faded blue overalls")
+2. worldPaletteEn에는 5페이지 전체를 관통하는 통일된 색감과 조명 톤을 영어로 10~15단어로 적으세요.
+3. 각 페이지의 scenePromptEn에는 주인공의 외형이나 옷을 바꾸는 말을 절대 쓰지 말고, 오직 "주인공의 동작(pose/action), 표정(expression), 배경 장소(setting)"만 간결하고 생생한 영어로 적으세요.
 
 반드시 아래 JSON 형식으로만 응답하세요(마크다운 코드블록 없이 순수 JSON):
 {
   "title": "동화책 제목 (따뜻하고 시적인 한국어)",
   "characterSummary": "그림에서 발견한 주인공의 특징 한 줄 요약 (한국어)",
-  "characterVisualEn": "Very specific English visual description of the character from the child's drawing (exact species or shape, body color, clothing/accessories, facial expression, cute simple proportions) so a text-to-image model can draw the exact same character consistently.",
+  "characterVisualEn": "Immutable 25-35 word English character sheet description (exact species/shape, fur/skin color, exact fixed outfit colors, signature accessory, simple cute proportions).",
+  "worldPaletteEn": "Consistent 10-15 word English color palette and lighting tone shared across all 5 pages.",
   "moral": "아이에게 전하는 따뜻한 한 문장 교훈 (한국어)",
   "pages": [
     {
       "text": "1페이지 본문 (한국어 2~3문장, 소리 내어 읽기 좋은 부드러운 해요체)",
-      "scenePromptEn": "Vivid English picture-book scene description for page 1 including the character's action, background environment, lighting, and cozy mood. No text or words in the image."
+      "scenePromptEn": "English action, expression, and background setting ONLY (do NOT alter the character's outfit or colors). No text in image."
     }
   ]
 }
@@ -963,7 +1194,7 @@ pages 배열은 정확히 5개(기-승-전-결-여운)로 작성하세요.
         const timer = setTimeout(() => controller.abort(), 25000);
         try {
           document.getElementById('loading-desc').innerHTML =
-            `<b>${modelName.replace('models/', '')}</b> 모델로<br>5장짜리 따뜻한 동화를 쓰고 있어요.`;
+            `<b>${modelName.replace('models/', '')}</b> 모델로<br>캐릭터 설정집과 5장 동화를 쓰고 있어요.`;
 
           const endpoint = `https://generativelanguage.googleapis.com/v1beta/${modelName}:generateContent?key=${encodeURIComponent(apiKey)}`;
           const res = await fetch(endpoint, {
@@ -979,7 +1210,7 @@ pages 배열은 정확히 5개(기-승-전-결-여운)로 작성하세요.
               }],
               generationConfig: {
                 responseMimeType: 'application/json',
-                temperature: 0.85
+                temperature: 0.8
               }
             })
           });
@@ -1008,20 +1239,35 @@ pages 배열은 정확히 5개(기-승-전-결-여운)로 작성하세요.
       throw lastError || new Error('사용 가능한 Gemini 모델을 찾지 못했습니다.');
     }
 
-    // ==================== 통합 삽화 생성기 (Cloudflare FLUX 무료 / Gemini) ====================
-    async function generateIllustration(doodleDataUrl, scenePromptEn, styleId, characterVisualEn) {
-      if (getImgProvider() === 'cloudflare') {
-        return await callCloudflareFluxApi(scenePromptEn, styleId, characterVisualEn);
-      }
-      return await callGeminiImageApi(getApiKey(), doodleDataUrl, scenePromptEn, styleId, characterVisualEn);
+    // ==================== ★ 일관성 잠금 프롬프트 빌더 & 통합 삽화 생성기 ====================
+    function buildConsistentPrompt(book, scenePromptEn) {
+      const styleObj = ART_STYLES[book.styleId] || ART_STYLES.ghibli90s;
+      const charAnchor = book.characterVisualEn || 'a cute charming storybook character';
+      const paletteAnchor = book.worldPaletteEn || 'warm cream, soft sage green, muted ochre, gentle sunlit storybook palette';
+
+      // FLUX는 앞부분 토큰 가중치가 가장 높으므로 [화풍 + 고정 주인공 + 통일 색감]을 모든 페이지 맨 앞에 100% 동일하게 배치
+      return [
+        `${styleObj.prompt}.`,
+        `Recurring main character (keep exact same face, colors, and outfit): ${charAnchor}.`,
+        `Unified color palette and lighting: ${paletteAnchor}.`,
+        `Scene action and background: ${scenePromptEn}.`,
+        `Wide 4:3 picture book illustration, single cohesive storybook series, no borders, no speech bubbles, no text or letters.`
+      ].join(' ');
     }
 
-    async function callCloudflareFluxApi(scenePromptEn, styleId, characterVisualEn) {
+    async function generateIllustration(book, scenePromptEn, seedOverride) {
+      const seedToUse = seedOverride || book.seed || 424242;
+      if (getImgProvider() === 'cloudflare') {
+        return await callCloudflareFluxApi(book, scenePromptEn, seedToUse);
+      }
+      return await callGeminiImageApi(getApiKey(), book, scenePromptEn);
+    }
+
+    async function callCloudflareFluxApi(book, scenePromptEn, seedValue) {
       const workerUrl = getCfWorkerUrl();
       if (!workerUrl) throw new Error('⚙️ 설정에서 Cloudflare Worker 주소를 먼저 입력해 주세요.');
 
-      const styleObj = ART_STYLES[styleId] || ART_STYLES.ghibli90s;
-      const fullPrompt = `${styleObj.prompt} Main character: ${characterVisualEn}. Scene: ${scenePromptEn}. Wide horizontal storybook illustration, cohesive warm lighting, zero text or letters.`;
+      const fullPrompt = buildConsistentPrompt(book, scenePromptEn);
 
       const controller = new AbortController();
       const timer = setTimeout(() => controller.abort(), 35000);
@@ -1030,7 +1276,11 @@ pages 배열은 정확히 5개(기-승-전-결-여운)로 작성하세요.
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           signal: controller.signal,
-          body: JSON.stringify({ prompt: fullPrompt, steps: 4 })
+          body: JSON.stringify({
+            prompt: fullPrompt,
+            steps: 4,
+            seed: Number(seedValue) || 424242
+          })
         });
         clearTimeout(timer);
 
@@ -1051,19 +1301,38 @@ pages 배열은 정확히 5개(기-승-전-결-여운)로 작성하세요.
       }
     }
 
-    async function callGeminiImageApi(apiKey, doodleDataUrl, scenePromptEn, styleId, characterVisualEn) {
+    // Gemini 이미지 모델(유료 결제 계정) 사용 시 1페이지 완성 삽화를 참조 이미지로 함께 전달해 일관성 극대화
+    async function callGeminiImageApi(apiKey, book, scenePromptEn) {
       if (!apiKey) throw new Error('Gemini API 키를 먼저 입력해 주세요.');
-      const styleObj = ART_STYLES[styleId] || ART_STYLES.ghibli90s;
-      const base64 = doodleDataUrl.split(',')[1];
-      const mimeType = doodleDataUrl.startsWith('data:image/png') ? 'image/png' : 'image/jpeg';
       const pref = getImgModelPref();
       const candidates = pref === 'auto'
         ? ['models/gemini-2.5-flash-image', 'models/gemini-2.0-flash-exp-image-generation']
         : [`models/${pref}`];
 
-      const fullPrompt = `Create a horizontal 4:3 storybook illustration based on the child's doodle. Character: ${characterVisualEn}. Scene: ${scenePromptEn}. Style: ${styleObj.prompt}`;
-      let lastError = null;
+      const partsPayload = [{ text: buildConsistentPrompt(book, scenePromptEn) }];
 
+      // 1) 원본 낙서 참조
+      if (book.originalDoodle) {
+        partsPayload.push({
+          inline_data: {
+            mime_type: book.originalDoodle.startsWith('data:image/png') ? 'image/png' : 'image/jpeg',
+            data: book.originalDoodle.split(',')[1]
+          }
+        });
+      }
+      // 2) 이미 완성된 첫 번째 삽화가 있다면 화풍·주인공 참조 시트로 추가 전달
+      const refPageImg = book.pages.find(p => !!p.imageUrl)?.imageUrl;
+      if (refPageImg) {
+        partsPayload.push({ text: "STRICTLY match the exact art style, brushwork, color palette, and main character face/outfit shown in this reference storybook page:" });
+        partsPayload.push({
+          inline_data: {
+            mime_type: refPageImg.startsWith('data:image/png') ? 'image/png' : 'image/jpeg',
+            data: refPageImg.split(',')[1]
+          }
+        });
+      }
+
+      let lastError = null;
       for (const modelName of candidates) {
         try {
           const endpoint = `https://generativelanguage.googleapis.com/v1beta/${modelName}:generateContent?key=${encodeURIComponent(apiKey)}`;
@@ -1071,7 +1340,7 @@ pages 배열은 정확히 5개(기-승-전-결-여운)로 작성하세요.
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              contents: [{ parts: [{ text: fullPrompt }, { inline_data: { mime_type: mimeType, data: base64 } }] }],
+              contents: [{ parts: partsPayload }],
               generationConfig: { responseModalities: ['IMAGE', 'TEXT'] }
             })
           });
@@ -1090,33 +1359,51 @@ pages 배열은 정확히 5개(기-승-전-결-여운)로 작성하세요.
 
     async function generateAllPageIllustrations(book) {
       if (!canGenerateIllustrations() || isGeneratingImages) return;
+      if (!book.seed) book.seed = Math.floor(Math.random() * 899999) + 100000;
+
       isGeneratingImages = true;
+      illusErrorText = '';
+      renderIllusProgressPanel();
 
       for (let i = 0; i < book.pages.length; i++) {
         if (currentBook?.id !== book.id) break;
         if (book.pages[i].imageUrl) continue;
 
+        activeGeneratingPage = i + 1;
+        renderIllusProgressPanel();
         if (currentPageIdx === i + 1) renderCurrentPage();
+
         try {
-          const imgUrl = await generateIllustration(
-            book.originalDoodle,
-            book.pages[i].scenePromptEn,
-            book.styleId,
-            book.characterVisualEn
-          );
+          // 1~5페이지 모두 동일한 book.seed를 사용해 화풍·색감·주인공 일관성 유지
+          const imgUrl = await generateIllustration(book, book.pages[i].scenePromptEn, book.seed);
           book.pages[i].imageUrl = imgUrl;
           saveBookToLibrary(book);
+
+          renderIllusProgressPanel();
           if (currentBook?.id === book.id && currentPageIdx === i + 1) {
             renderCurrentPage();
           }
         } catch (err) {
           console.warn(`Page ${i + 1} illustration failed:`, err);
-          if (i === 0) showToast('삽화 생성 오류: ' + err.message);
+          illusErrorText = `${i + 1}페이지 오류: ${err.message}`;
+          showToast(`⚠️ ${i + 1}페이지 삽화 오류: ${err.message}`);
           break;
         }
       }
+
       isGeneratingImages = false;
-      if (currentBook?.id === book.id) renderCurrentPage();
+      activeGeneratingPage = 0;
+
+      const allDone = book.pages.every(p => !!p.imageUrl);
+      if (allDone && currentBook?.id === book.id) {
+        window._justCompletedBookId = book.id;
+        showToast('✨ 5/5 모든 페이지가 같은 그림체·주인공으로 완성되었어요!');
+      }
+
+      if (currentBook?.id === book.id) {
+        renderIllusProgressPanel();
+        renderCurrentPage();
+      }
     }
 
     async function regenerateCurrentIllustration() {
@@ -1126,6 +1413,7 @@ pages 배열은 정확히 5개(기-승-전-결-여운)로 작성하세요.
         openSettings();
         return;
       }
+      if (!currentBook.seed) currentBook.seed = Math.floor(Math.random() * 899999) + 100000;
 
       const loader = document.getElementById('page-img-loader');
       const loaderText = document.getElementById('page-img-loader-text');
@@ -1135,21 +1423,28 @@ pages 배열은 정확히 5개(기-승-전-결-여운)로 작성하세요.
       imgEl.classList.add('hidden');
       loader.classList.remove('hidden');
       btn.disabled = true;
-      loaderText.textContent = `${ART_STYLES[currentBook.styleId].short} 화풍으로 새로 그리는 중...`;
+      loaderText.textContent = `${ART_STYLES[currentBook.styleId].short} 고정 화풍으로 새로 그리는 중...`;
 
       try {
-        const scenePrompt = currentPageIdx === 0
-          ? `Enchanting storybook cover portrait of the protagonist in a peaceful meadow matching the story "${currentBook.title}".`
+        const isCover = currentPageIdx === 0;
+        const scenePrompt = isCover
+          ? `Enchanting storybook cover portrait of the protagonist standing warmly in a peaceful meadow matching the story "${currentBook.title}".`
           : currentBook.pages[currentPageIdx - 1].scenePromptEn;
 
-        const newImg = await generateIllustration(
-          currentBook.originalDoodle,
-          scenePrompt,
-          currentBook.styleId,
-          currentBook.characterVisualEn
-        );
+        // 같은 페이지를 다시 그릴 때는 seed에 +1씩 소폭 변주를 주어 똑같은 그림 반복을 방지
+        let seedToUse = currentBook.seed;
+        if (isCover) {
+          currentBook.coverRegenCount = (currentBook.coverRegenCount || 0) + 1;
+          seedToUse = currentBook.seed + currentBook.coverRegenCount;
+        } else {
+          const p = currentBook.pages[currentPageIdx - 1];
+          p.regenCount = (p.regenCount || 0) + 1;
+          seedToUse = currentBook.seed + p.regenCount;
+        }
 
-        if (currentPageIdx === 0) currentBook.coverImage = newImg;
+        const newImg = await generateIllustration(currentBook, scenePrompt, seedToUse);
+
+        if (isCover) currentBook.coverImage = newImg;
         else currentBook.pages[currentPageIdx - 1].imageUrl = newImg;
 
         saveBookToLibrary(currentBook);
@@ -1158,6 +1453,7 @@ pages 배열은 정확히 5개(기-승-전-결-여운)로 작성하세요.
         showToast('삽화 생성 실패: ' + err.message);
       } finally {
         btn.disabled = false;
+        renderIllusProgressPanel();
         renderCurrentPage();
       }
     }
@@ -1165,15 +1461,16 @@ pages 배열은 정확히 5개(기-승-전-결-여운)로 작성하세요.
     function buildDemoStory(name) {
       return {
         title: `${name}의 반짝이는 산책길`,
-        characterSummary: `호기심 가득한 눈을 가진 귀여운 친구 ${name}`,
-        characterVisualEn: `a cute small round storybook creature named ${name} with bright curious eyes and a tiny yellow backpack`,
+        characterSummary: `노란 가방을 멘 작고 둥근 숲속 친구 ${name}`,
+        characterVisualEn: `a small round cream-colored bear cub with tiny round ears, gentle dot eyes, wearing a knitted red scarf and a tiny yellow backpack`,
+        worldPaletteEn: `warm cream, soft sage green, muted ochre, dappled morning sunlight`,
         moral: '작은 호기심 하나가 평범한 하루를 멋진 모험으로 바꿔준답니다.',
         pages: [
-          { text: `어느 맑은 아침, ${name}는 창문 밖으로 날아가는 노란 나비를 보았어요. "안녕, 나비야! 어디로 가는 거니?" ${name}는 작은 가방을 메고 조심스럽게 문을 열었답니다.`, scenePromptEn: 'A sunny morning wooden cottage doorway with a yellow butterfly fluttering outside into a lush garden.' },
-          { text: `풀잎에 맺힌 이슬방울을 지나 언덕에 오르자, 바람이 살랑살랑 노래를 불렀어요. ${name}는 풀밭에서 길을 잃은 아기 달팽이 한 마리를 발견했지요.`, scenePromptEn: 'A gentle sunlit green meadow hill with morning dew and a tiny baby snail resting on a clover leaf.' },
-          { text: `"걱정 마, 내가 집까지 데려다줄게!" ${name}는 나뭇잎 우산을 씌워 주며 천천히, 아주 천천히 달팽이의 걸음에 맞추어 걸었어요.`, scenePromptEn: 'Walking slowly along a dappled forest dirt path holding a big green leaf umbrella over a tiny snail.' },
-          { text: `얼마 지나지 않아 버섯 지붕 아래 달팽이 가족이 반갑게 손을 흔들었어요. 달팽이 엄마는 고마움의 표시로 반짝이는 솔방울을 선물해 주었답니다.`, scenePromptEn: 'A cozy little mushroom cottage under tall trees where a happy snail family waves warmly holding a golden pinecone.' },
-          { text: `노을이 주황빛으로 물들 무렵 집으로 돌아온 ${name}는 솔방울을 머리맡에 두었어요. 오늘 나눈 작은 친절 덕분에 밤하늘의 별들이 더욱 포근하게 빛났답니다.`, scenePromptEn: 'A peaceful warm amber sunset over a quiet cozy hillside cottage as the first stars appear in the evening sky.' }
+          { text: `어느 맑은 아침, ${name}는 창문 밖으로 날아가는 노란 나비를 보았어요. "안녕, 나비야! 어디로 가는 거니?" ${name}는 작은 가방을 메고 조심스럽게 문을 열었답니다.`, scenePromptEn: 'Standing cheerfully at a sunny wooden cottage doorway watching a yellow butterfly flutter into a lush garden.' },
+          { text: `풀잎에 맺힌 이슬방울을 지나 언덕에 오르자, 바람이 살랑살랑 노래를 불렀어요. ${name}는 풀밭에서 길을 잃은 아기 달팽이 한 마리를 발견했지요.`, scenePromptEn: 'Kneeling gently on a sunlit green meadow hill, smiling curiously at a tiny baby snail resting on a clover leaf.' },
+          { text: `"걱정 마, 내가 집까지 데려다줄게!" ${name}는 나뭇잎 우산을 씌워 주며 천천히, 아주 천천히 달팽이의 걸음에 맞추어 걸었어요.`, scenePromptEn: 'Walking slowly along a dappled forest dirt path holding a big green leaf like an umbrella over a tiny snail.' },
+          { text: `얼마 지나지 않아 버섯 지붕 아래 달팽이 가족이 반갑게 손을 흔들었어요. 달팽이 엄마는 고마움의 표시로 반짝이는 솔방울을 선물해 주었답니다.`, scenePromptEn: 'Smiling warmly in front of a cozy little mushroom cottage under tall trees while a happy snail family offers a golden pinecone.' },
+          { text: `노을이 주황빛으로 물들 무렵 집으로 돌아온 ${name}는 솔방울을 머리맡에 두었어요. 오늘 나눈 작은 친절 덕분에 밤하늘의 별들이 더욱 포근하게 빛났답니다.`, scenePromptEn: 'Sitting peacefully by a cozy cottage window holding a golden pinecone, looking out at a warm amber sunset sky.' }
         ]
       };
     }
@@ -1185,6 +1482,7 @@ pages 배열은 정확히 5개(기-승-전-결-여운)로 작성하세요.
       document.getElementById('view-library').classList.add('hidden');
       document.getElementById('view-reader').classList.remove('hidden');
       renderViewerStyleBar();
+      renderIllusProgressPanel();
       renderCurrentPage();
     }
 
@@ -1205,6 +1503,7 @@ pages 배열은 정확히 5개(기-승-전-결-여운)로 작성하세요.
       void card.offsetWidth;
       card.classList.add(delta > 0 ? 'page-flip-next' : 'page-flip-prev');
 
+      renderIllusProgressPanel();
       renderCurrentPage();
     }
 
@@ -1217,6 +1516,7 @@ pages 배열은 정확히 5개(기-승-전-결-여운)로 작성하세요.
       document.getElementById('reader-progress-text').textContent = isCover ? '표지 / 5페이지' : `${currentPageIdx} / 5페이지`;
       document.getElementById('page-badge').textContent = isCover ? '✨ 동화책 표지' : `제 ${currentPageIdx} 장`;
       document.getElementById('style-badge').textContent = styleObj.label;
+      document.getElementById('seed-lock-badge').textContent = `🔒 #${String(currentBook.seed || 424242).slice(-4)}`;
 
       const imgEl = document.getElementById('page-image');
       const loader = document.getElementById('page-img-loader');
@@ -1241,10 +1541,12 @@ pages 배열은 정확히 5개(기-승-전-결-여운)로 작성하세요.
           imgEl.src = page.imageUrl;
           imgEl.classList.remove('hidden');
           loader.classList.add('hidden');
-        } else if (canGenerateIllustrations() && isGeneratingImages) {
+        } else if (isGeneratingImages) {
           imgEl.classList.add('hidden');
           loader.classList.remove('hidden');
-          loaderText.textContent = `${currentPageIdx}페이지 ${styleObj.short} 삽화를 그리는 중...`;
+          loaderText.textContent = activeGeneratingPage === currentPageIdx
+            ? `지금 ${currentPageIdx}/5 페이지 ${styleObj.short} 삽화를 그리는 중...`
+            : `${activeGeneratingPage}/5 페이지 완료 후 곧 그려드려요...`;
         } else {
           imgEl.src = currentBook.originalDoodle;
           imgEl.classList.remove('hidden');
@@ -1268,15 +1570,19 @@ pages 배열은 정확히 5개(기-승-전-결-여운)로 작성하세요.
       document.getElementById('next-page-btn').disabled = currentPageIdx === 5;
 
       const dots = document.getElementById('page-dots');
-      dots.innerHTML = [0, 1, 2, 3, 4, 5].map(idx => `
-        <button onclick="jumpToPage(${idx})" class="w-2.5 h-2.5 rounded-full transition ${idx === currentPageIdx ? 'bg-amber-400 scale-125' : 'bg-stone-600'}"></button>
-      `).join('');
+      dots.innerHTML = [0, 1, 2, 3, 4, 5].map(idx => {
+        const hasImg = idx > 0 && currentBook.pages[idx - 1]?.imageUrl;
+        const active = idx === currentPageIdx;
+        const color = active ? 'bg-amber-400 scale-125' : (hasImg ? 'bg-emerald-400/80' : 'bg-stone-600');
+        return `<button onclick="jumpToPage(${idx})" class="w-2.5 h-2.5 rounded-full transition ${color}"></button>`;
+      }).join('');
     }
 
     function jumpToPage(idx) {
       if (!currentBook) return;
       stopTts();
       currentPageIdx = idx;
+      renderIllusProgressPanel();
       renderCurrentPage();
     }
 
@@ -1586,8 +1892,11 @@ pages 배열은 정확히 5개(기-승-전-결-여운)로 작성하세요.
     function openBookFromLibrary(id) {
       const found = library.find(b => b.id === id);
       if (!found) return;
+      if (!found.seed) found.seed = Math.floor(Math.random() * 899999) + 100000;
       currentBook = found;
       currentPageIdx = 0;
+      illusErrorText = '';
+      window._justCompletedBookId = null;
       openReaderView();
     }
 
@@ -1610,11 +1919,13 @@ pages 배열은 정확히 5개(기-승-전-결-여운)로 작성하세요.
               ${pair.map(b => {
                 const thumb = b.coverImage || b.pages?.[0]?.imageUrl || b.originalDoodle;
                 const styleName = ART_STYLES[b.styleId]?.short || '동화';
+                const doneCnt = (b.pages || []).filter(p => !!p.imageUrl).length;
                 return `
                   <div onclick="openBookFromLibrary('${b.id}')" class="hardcover-book rounded-r-2xl rounded-l-md p-2.5 cursor-pointer hover:-translate-y-1 transition relative group border border-amber-500/35">
                     <button onclick="deleteBook('${b.id}', event)" class="absolute top-1.5 right-1.5 w-6 h-6 rounded-full bg-black/60 text-amber-100 text-[10px] flex items-center justify-center opacity-80 hover:bg-rose-700">✕</button>
-                    <div class="aspect-[4/3] rounded-lg overflow-hidden border border-amber-300/40 bg-[#FAF4E6] mb-2">
+                    <div class="aspect-[4/3] rounded-lg overflow-hidden border border-amber-300/40 bg-[#FAF4E6] mb-2 relative">
                       <img src="${thumb}" class="w-full h-full object-cover" alt="${b.title}" />
+                      <span class="absolute bottom-1 right-1 bg-black/70 text-[9px] text-amber-200 px-1.5 py-0.5 rounded font-bold">삽화 ${doneCnt}/5</span>
                     </div>
                     <h3 class="font-story font-bold text-xs text-amber-100 line-clamp-2 leading-snug min-h-[2rem]">${b.title}</h3>
                     <div class="flex items-center justify-between mt-1.5 text-[10px] text-amber-300/75">
