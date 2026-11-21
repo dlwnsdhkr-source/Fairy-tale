@@ -1,0 +1,25 @@
+{
+  "name": "낙서 동화책 아틀리에",
+  "short_name": "낙서동화책",
+  "description": "아이의 낙서가 AI 그림동화책으로 피어나는 스튜디오",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#261810",
+  "theme_color": "#2C1E16",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2702/2702134.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2702/2702134.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
